@@ -42,22 +42,25 @@ async function request<T>(path: string, init?: RequestInit): Promise<T | null> {
 
 export async function getKuota(mint: string): Promise<KuotaStats | null> {
   if (!BASE) return mockGetKuota(mint);
-  const data = await request<Omit<KuotaStats, "isSample">>(`/kuota/${mint}`);
-  return data && { ...data, isSample: false };
+  const data = await request<Omit<KuotaStats, "isSample" | "dammPool"> & { dammPool?: string | null }>(
+    `/kuota/${mint}`,
+  );
+  return data && { ...data, dammPool: data.dammPool ?? null, isSample: false };
 }
 
-export async function getBurns(mint: string): Promise<Page<BurnItem>> {
+const cursorQuery = (cursor?: string) => (cursor ? `?cursor=${encodeURIComponent(cursor)}` : "");
+const emptyPage = { items: [], nextCursor: null };
+
+export async function getBurns(mint: string, cursor?: string): Promise<Page<BurnItem>> {
   if (!BASE) return mockGetBurns(mint);
-  return (await request<Page<BurnItem>>(`/kuota/${mint}/burns`)) ?? { items: [], nextCursor: null };
+  return (await request<Page<BurnItem>>(`/kuota/${mint}/burns${cursorQuery(cursor)}`)) ?? emptyPage;
 }
 
-export async function getSettlements(mint: string): Promise<Page<SettlementItem>> {
+export async function getSettlements(mint: string, cursor?: string): Promise<Page<SettlementItem>> {
   if (!BASE) return mockGetSettlements(mint);
   return (
-    (await request<Page<SettlementItem>>(`/kuota/${mint}/settlements`)) ?? {
-      items: [],
-      nextCursor: null,
-    }
+    (await request<Page<SettlementItem>>(`/kuota/${mint}/settlements${cursorQuery(cursor)}`)) ??
+    emptyPage
   );
 }
 

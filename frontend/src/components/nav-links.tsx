@@ -20,7 +20,7 @@ export function NavLinks() {
             href={l.href}
             aria-current={active ? "page" : undefined}
             className={`inline-flex min-h-11 items-center rounded-control px-3 text-sm font-semibold underline-offset-8 hover:underline ${
-              active ? "underline decoration-2 decoration-accent" : ""
+              active ? "underline decoration-[3px] decoration-ink" : ""
             }`}
           >
             {l.label}

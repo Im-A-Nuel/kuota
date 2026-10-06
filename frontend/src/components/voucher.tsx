@@ -11,12 +11,22 @@ export interface VoucherData {
   discountBps: number;
   curveProgressBps: number;
   endpointUrl: string;
+  /** Sample data from the mock layer. */
   isSample?: boolean;
+  /** Launch-form preview of a kuota that does not exist yet. */
+  preview?: boolean;
+}
+
+function mintLabel(data: VoucherData) {
+  if (data.preview) return "Assigned at launch";
+  if (data.isSample || !data.mint) return "Sample, not on-chain";
+  return shortKey(data.mint, 4, 4);
 }
 
 export function Voucher({ data }: { data: VoucherData }) {
   const progress = Math.min(100, Math.max(0, data.curveProgressBps / 100));
   const graduated = data.status === "graduated";
+  const statusText = data.preview ? "Opening price" : graduated ? "Graduated" : "On curve";
 
   return (
     <article className="ticket" aria-label={`${data.name} voucher`}>
@@ -36,8 +46,7 @@ export function Voucher({ data }: { data: VoucherData }) {
             <span className="ml-1.5 text-lg font-bold text-mute">USDC</span>
           </p>
           <p className="pb-1 text-sm text-mute">
-            per call now.{" "}
-            <s className="decoration-2">{formatUsdc(data.usdcPrice)}</s> paying with USDC
+            per call, against {formatUsdc(data.usdcPrice)} USDC paying direct
           </p>
         </div>
 
@@ -70,12 +79,12 @@ export function Voucher({ data }: { data: VoucherData }) {
         <div>
           <p className="text-xs font-semibold text-mute">Mint</p>
           <p className="text-sm font-semibold" title={data.mint ?? undefined}>
-            {data.mint ? shortKey(data.mint, 4, 4) : "Not launched"}
+            {mintLabel(data)}
           </p>
         </div>
         <div className="sm:mt-5">
           <p className="text-xs font-semibold text-mute">Status</p>
-          <p className="text-sm font-bold text-teal">{graduated ? "Graduated" : "On curve"}</p>
+          <p className="text-sm font-bold text-teal">{statusText}</p>
         </div>
       </div>
     </article>

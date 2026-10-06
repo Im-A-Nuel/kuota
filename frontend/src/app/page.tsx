@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CodeBlock } from "@/components/code-block";
 import { CurveChart } from "@/components/curve-chart";
 import { SampleNotice } from "@/components/states";
 import { Voucher } from "@/components/voucher";
@@ -8,6 +9,31 @@ import { wholeUnits } from "@/lib/format";
 import { mockGetBurns, mockGetKuota, SAMPLE_MINT } from "@/lib/mock-data";
 
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+const RESPONSE_402 = `HTTP/1.1 402 Payment Required
+
+{
+  "x402Version": 2,
+  "accepts": [
+    { "scheme": "exact",
+      "asset": "${USDC_MINT}",
+      "amount": "10000" },
+    { "scheme": "exact",
+      "asset": "<KUOTA_MINT>",
+      "amount": "1000000" }
+  ]
+}`;
+
+const AGENT_SNIPPET = `import { createKuotaFetch } from "kuota-fetch";
+
+const kuotaFetch = createKuotaFetch({
+  signer,              // your agent's Keypair
+  connection,          // a Solana Connection
+  budgetUsdcPerHour: 2,
+});
+
+// Same call as fetch. Payment is handled on the 402.
+const res = await kuotaFetch("https://api.example/v1/resource");`;
 
 const primaryCta =
   "inline-flex min-h-12 items-center rounded-control bg-accent px-5 font-bold text-accent-ink hover:brightness-95";
@@ -48,20 +74,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="lg:col-span-7">
-          <Voucher
-            data={{
-              name: sample.name,
-              symbol: sample.symbol,
-              mint: null,
-              status: sample.status,
-              priceKuotaUsdc: sample.priceKuotaUsdc,
-              usdcPrice: sample.usdcPrice,
-              discountBps: sample.discountBps,
-              curveProgressBps: sample.curveProgressBps,
-              endpointUrl: sample.endpointUrl,
-              isSample: true,
-            }}
-          />
+          <Voucher data={sample} />
           <div className="mt-3 space-y-2">
             <SampleNotice what="This voucher uses the worked example from the project docs." />
             {usingSampleData && (
@@ -90,27 +103,8 @@ export default function HomePage() {
             x402 V2 and are checked against the installed SDK before release.
           </p>
         </div>
-        <div className="lg:col-span-8">
-          <pre
-            tabIndex={0}
-            aria-label="Example 402 response body"
-            className="overflow-x-auto rounded-panel border-[1.5px] border-ink bg-card p-5 text-sm leading-relaxed"
-            style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" }}
-          >
-            {`HTTP/1.1 402 Payment Required
-
-{
-  "x402Version": 2,
-  "accepts": [
-    { "scheme": "exact",
-      "asset": "${USDC_MINT}",
-      "amount": "10000" },
-    { "scheme": "exact",
-      "asset": "<KUOTA_MINT>",
-      "amount": "1000000" }
-  ]
-}`}
-          </pre>
+        <div className="min-w-0 lg:col-span-8">
+          <CodeBlock label="Example 402 response body" code={RESPONSE_402} />
           <dl className="mt-4 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
             <div>
               <dt className="font-bold">amount 10000</dt>
@@ -121,6 +115,34 @@ export default function HomePage() {
               <dd className="text-mute">1 kuota, which is exactly one call.</dd>
             </div>
           </dl>
+        </div>
+      </section>
+
+      {/* Agents: wide snippet left, the decision rule right (mirror of the section above). */}
+      <section className="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-12">
+        <div className="min-w-0 lg:col-span-7">
+          <CodeBlock label="kuotaFetch example" code={AGENT_SNIPPET} />
+        </div>
+        <div className="order-first lg:order-none lg:col-span-5">
+          <h2 className="text-4xl font-extrabold">For agents, swap fetch for kuotaFetch.</h2>
+          <p className="mt-4">
+            On every 402 the client compares the two prices and follows one rule, in this order:
+          </p>
+          <dl className="mt-4 border-t-[1.5px] border-ink text-sm">
+            {[
+              ["Pay with kuota", "when you hold at least 1 and it costs no more than the USDC price."],
+              ["Buy a batch, then pay with kuota", "when you hold none, a batch of 100 is cheaper even after slippage, and it fits your hourly budget."],
+              ["Pay with USDC", "in every other case."],
+            ].map(([term, value]) => (
+              <div key={term} className="border-b border-rule py-3">
+                <dt className="font-bold">{term}</dt>
+                <dd className="text-mute">{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 text-sm text-mute">
+            Not released yet. The package name and options follow the project docs.
+          </p>
         </div>
       </section>
 
@@ -173,12 +195,12 @@ export default function HomePage() {
           </p>
           <ul className="mt-6 divide-y divide-rule border-y-[1.5px] border-ink">
             {burns.map((b) => (
-              <li key={b.id} className="flex items-center justify-between gap-4 py-3">
+              <li key={b.id} className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[1fr_auto_auto]">
                 <span className="font-display text-2xl font-bold">
                   {wholeUnits(b.amount)} kuota
                 </span>
+                <span className="stamp justify-self-end sm:order-last">Redeemed</span>
                 <span className="text-sm text-mute">sample, no transaction</span>
-                <span className="stamp">Redeemed</span>
               </li>
             ))}
           </ul>

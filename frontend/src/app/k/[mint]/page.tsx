@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BuyPanel } from "@/components/buy-panel";
+import { CopyButton } from "@/components/copy-button";
 import { CurveChart } from "@/components/curve-chart";
-import { EmptyState, SampleNotice } from "@/components/states";
+import { BurnLedger, PaymentList } from "@/components/ledgers";
+import { ProviderSetup } from "@/components/provider-setup";
+import { SampleNotice } from "@/components/states";
 import { Voucher } from "@/components/voucher";
 import { getBurns, getKuota, getSettlements } from "@/lib/api";
 import { estimateCurve } from "@/lib/curve";
 import {
-  explorerTx,
+  explorerAccount,
   formatCount,
   formatPercentFromBps,
   formatUsdc,
   hostOf,
-  shortKey,
+  jupiterSwap,
   wholeUnits,
 } from "@/lib/format";
 
@@ -20,23 +23,15 @@ export async function generateMetadata({ params }: PageProps<"/k/[mint]">): Prom
   const { mint } = await params;
   const kuota = await getKuota(mint);
   return kuota
-    ? { title: `${kuota.symbol}`, description: `${kuota.name}: 1 kuota pays for 1 call.` }
+    ? {
+        title: `${kuota.symbol}, ${kuota.name}`,
+        description: `1 ${kuota.symbol} pays for 1 call on ${hostOf(kuota.endpointUrl)}. Now ${formatPercentFromBps(kuota.discountBps)} below the USDC price.`,
+      }
     : { title: "Kuota not found" };
 }
 
-function TxLink({ signature }: { signature: string | null }) {
-  if (!signature) return <span className="text-sm text-mute">sample, no transaction</span>;
-  return (
-    <a
-      href={explorerTx(signature)}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4"
-    >
-      {shortKey(signature, 6, 6)}
-    </a>
-  );
-}
+const outlineLink =
+  "inline-flex min-h-11 items-center rounded-control border-[1.5px] border-ink px-3 text-sm font-semibold hover:bg-ink hover:text-paper";
 
 export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
   const { mint } = await params;
@@ -44,6 +39,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
   if (!kuota) notFound();
 
   const [burns, settlements] = await Promise.all([getBurns(mint), getSettlements(mint)]);
+  const graduated = kuota.status === "graduated";
 
   const simulation = estimateCurve({
     usdcPricePerCall: kuota.usdcPrice,
@@ -61,27 +57,32 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
     ["Holders", formatCount(kuota.holders)],
     ["Burned", `${formatCount(wholeUnits(kuota.burned))} kuota`],
     ["Calls paid with kuota", formatCount(kuota.callsPaid)],
-    ["Endpoint", hostOf(kuota.endpointUrl)],
   ];
 
   return (
     <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-10 gap-y-12 px-4 pb-4 pt-10 sm:px-6 lg:grid-cols-12">
       <div className="space-y-3 lg:col-span-8">
-        {kuota.isSample && <SampleNotice what="Figures come from the worked example in the docs." />}
-        <Voucher
-          data={{
-            name: kuota.name,
-            symbol: kuota.symbol,
-            mint: kuota.isSample ? null : kuota.mint,
-            status: kuota.status,
-            priceKuotaUsdc: kuota.priceKuotaUsdc,
-            usdcPrice: kuota.usdcPrice,
-            discountBps: kuota.discountBps,
-            curveProgressBps: kuota.curveProgressBps,
-            endpointUrl: kuota.endpointUrl,
-            isSample: kuota.isSample,
-          }}
-        />
+        {kuota.isSample && <SampleNotice what="Figures follow the worked example in the docs." />}
+        <Voucher data={kuota} />
+
+        {/* Identifiers agents and providers need to copy into their config. */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {kuota.isSample ? (
+            <p className="text-sm text-mute">
+              A real kuota shows its mint here, with copy and explorer links.
+            </p>
+          ) : (
+            <>
+              <CopyButton text={kuota.mint} label="Copy mint address" />
+              <a href={explorerAccount(kuota.mint)} target="_blank" rel="noreferrer" className={outlineLink}>
+                Mint on Solscan
+              </a>
+              <a href={kuota.endpointUrl} target="_blank" rel="noreferrer" className={outlineLink}>
+                Endpoint: {hostOf(kuota.endpointUrl)}
+              </a>
+            </>
+          )}
+        </div>
       </div>
 
       <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1">
@@ -91,12 +92,12 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
             priceKuotaUsdc={kuota.priceKuotaUsdc}
             usdcPrice={kuota.usdcPrice}
             endpointHost={hostOf(kuota.endpointUrl)}
-            graduated={kuota.status === "graduated"}
+            graduated={graduated}
           />
         </div>
       </aside>
 
-      <div className="space-y-16 lg:col-span-8">
+      <div className="min-w-0 space-y-16 lg:col-span-8">
         <section aria-labelledby="specs">
           <h2 id="specs" className="text-3xl font-extrabold">
             The numbers
@@ -111,7 +112,33 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </dl>
         </section>
 
-        {kuota.status === "curve" && (
+        {graduated ? (
+          <section aria-labelledby="market">
+            <h2 id="market" className="text-3xl font-extrabold">
+              Trading on DAMM v2
+            </h2>
+            <p className="mt-2 max-w-prose">
+              The curve filled and the pool moved to Meteora DAMM v2, with its liquidity locked
+              permanently. The price is now set by the pool. If kuota ever costs more than a call
+              in USDC, agents simply pay USDC, so there is no reason to pay above that.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={jupiterSwap(kuota.mint)}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center rounded-control bg-accent px-4 font-bold text-accent-ink hover:brightness-95"
+              >
+                Swap on Jupiter
+              </a>
+              {kuota.dammPool && (
+                <a href={explorerAccount(kuota.dammPool)} target="_blank" rel="noreferrer" className={outlineLink}>
+                  DAMM v2 pool on Solscan
+                </a>
+              )}
+            </div>
+          </section>
+        ) : (
           <section aria-labelledby="curve">
             <h2 id="curve" className="mb-4 text-3xl font-extrabold">
               Where the curve stands
@@ -134,24 +161,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
             calls served.
           </p>
           <div className="mt-4">
-            {burns.items.length === 0 ? (
-              <EmptyState
-                title="Nothing burned yet."
-                body="The first row appears after the provider receives kuota and the burn worker runs. That takes at most 10 minutes after the first paid call."
-              />
-            ) : (
-              <ul className="divide-y divide-rule border-y-[1.5px] border-ink">
-                {burns.items.map((b) => (
-                  <li key={b.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3">
-                    <span className="font-display text-2xl font-bold">
-                      {formatCount(wholeUnits(b.amount))} kuota
-                    </span>
-                    <TxLink signature={b.signature} />
-                    <span className="stamp">Redeemed</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <BurnLedger mint={mint} initial={burns} />
           </div>
         </section>
 
@@ -160,34 +170,26 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
             Recent payments
           </h2>
           <div className="mt-4">
-            {settlements.items.length === 0 ? (
-              <EmptyState
-                title="No calls paid yet."
-                body="Payments show up here once an agent pays this endpoint with kuota or USDC."
-              />
-            ) : (
-              <ul className="divide-y divide-rule border-y-[1.5px] border-ink">
-                {settlements.items.map((s) => (
-                  <li key={s.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3">
-                    <span className="font-semibold">
-                      {s.asset === "kuota"
-                        ? `${formatCount(wholeUnits(s.amount))} kuota`
-                        : `${formatUsdc(Number(s.amount) / 1_000_000)} USDC`}
-                    </span>
-                    <span className="text-sm text-mute">
-                      {s.payer ? shortKey(s.payer) : "sample wallet"}
-                      {s.isTeam && ", team wallet"}
-                    </span>
-                    <TxLink signature={s.signature} />
-                  </li>
-                ))}
-              </ul>
-            )}
+            <PaymentList mint={mint} initial={settlements} />
           </div>
           <p className="mt-3 text-sm text-mute">
             Team wallets are labelled so traction counts can exclude them.
           </p>
         </section>
+
+        <details className="group rounded-panel border-[1.5px] border-ink bg-card">
+          <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 px-5 py-3 font-display text-xl font-bold">
+            Running this endpoint? Set it up to accept kuota
+            <span aria-hidden="true" className="text-2xl leading-none group-open:rotate-45">+</span>
+          </summary>
+          <div className="border-t border-rule p-5">
+            <ProviderSetup
+              mint={kuota.isSample ? null : kuota.mint}
+              usdcPrice={kuota.usdcPrice}
+              headingLevel={3}
+            />
+          </div>
+        </details>
       </div>
     </div>
   );

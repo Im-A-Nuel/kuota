@@ -16,6 +16,8 @@ export interface KuotaStats {
   burned: string;
   callsPaid: number;
   endpointUrl: string;
+  /** DAMM v2 pool after graduation, null while on the curve. */
+  dammPool: string | null;
   /** True while the data comes from the mock layer instead of the backend. */
   isSample: boolean;
 }

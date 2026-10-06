@@ -76,7 +76,7 @@ p {
 }
 
 :focus-visible {
-  outline: 3px solid var(--accent-text);
+  outline: 3px solid var(--ink);
   outline-offset: 3px;
   border-radius: 2px;
 }

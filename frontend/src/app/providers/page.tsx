@@ -64,7 +64,7 @@ export default async function ProvidersPage() {
                         : `${Math.round(p.curveProgressBps / 100)}% filled`}
                     </span>
                   </span>
-                  <span className="font-bold text-accent-text sm:col-span-2 sm:text-right">
+                  <span className="font-bold underline underline-offset-4 sm:col-span-2 sm:text-right">
                     Open token page
                   </span>
                 </Link>

@@ -51,14 +51,14 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
           aria-hidden="true"
         >
           <polygon points={gap} fill="var(--teal-wash)" />
-          <line x1="0" x2={W} y1={redeemY} y2={redeemY} stroke="var(--accent)" strokeWidth="2" strokeDasharray="6 5" vectorEffect="non-scaling-stroke" />
+          <line x1="0" x2={W} y1={redeemY} y2={redeemY} stroke="var(--ink)" strokeWidth="1.5" strokeDasharray="6 5" vectorEffect="non-scaling-stroke" />
           <polyline points={line} fill="none" stroke="var(--ink)" strokeWidth="3" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           <line x1="0" x2="0" y1="0" y2={H} stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
           <line x1="0" x2={W} y1={H} y2={H} stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
         </svg>
 
         <span
-          className="absolute right-0 -top-6 text-xs font-bold text-accent-text"
+          className="absolute right-0 text-xs font-bold"
           style={{ top: `calc(${(redeemY / H) * 100}% - 1.5rem)` }}
         >
           USDC price {formatUsdc(usdcPrice)}
@@ -80,7 +80,7 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
               aria-hidden="true"
             />
             <span
-              className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-ink bg-accent"
+              className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card bg-ink"
               style={{ left: `${marker.left}%`, top: `${marker.top}%` }}
               aria-hidden="true"
             />

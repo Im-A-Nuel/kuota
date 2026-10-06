@@ -49,7 +49,7 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
                 onChange={() => setUsd(a)}
                 className="peer sr-only"
               />
-              <span className="flex min-h-12 cursor-pointer items-center justify-center rounded-control border-[1.5px] border-ink font-bold peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-text hover:bg-teal-wash peer-checked:hover:bg-ink">
+              <span className="flex min-h-12 cursor-pointer items-center justify-center rounded-control border-[1.5px] border-ink font-bold peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink hover:bg-teal-wash peer-checked:hover:bg-ink">
                 ${a}
               </span>
             </label>

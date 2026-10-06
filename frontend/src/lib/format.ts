@@ -1,3 +1,5 @@
+import { CLUSTER } from "./config";
+
 const UNIT = 1_000_000n;
 
 /** Base units (6 decimals) to a whole-number of tokens. Fractions are dropped on purpose. */
@@ -40,6 +42,31 @@ export function hostOf(url: string): string {
   }
 }
 
+const clusterQuery = CLUSTER === "devnet" ? "?cluster=devnet" : "";
+
 export function explorerTx(signature: string): string {
-  return `https://solscan.io/tx/${signature}`;
+  return `https://solscan.io/tx/${signature}${clusterQuery}`;
+}
+
+export function explorerAccount(address: string): string {
+  return `https://solscan.io/account/${address}${clusterQuery}`;
+}
+
+export function jupiterSwap(mint: string): string {
+  return `https://jup.ag/swap/USDC-${mint}`;
+}
+
+/** Fixed UTC format so server and client render the same string. */
+export function formatUtc(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${d.toISOString().slice(0, 16).replace("T", " ")} UTC`;
+}
+
+/** Parses user-typed numbers, accepting "150,000", "150 000" and "150_000". */
+export function parseLooseNumber(raw: string, { integer = false } = {}): number {
+  const cleaned = raw.trim().replace(/[\s_,]/g, "");
+  const normalized = integer ? cleaned.replace(/\./g, "") : cleaned;
+  if (normalized === "") return NaN;
+  return Number(normalized);
 }

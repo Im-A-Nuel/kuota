@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LaunchForm } from "@/components/launch-form";
+import { ProviderSetup } from "@/components/provider-setup";
 
 export const metadata: Metadata = {
   title: "Launch a kuota",
@@ -17,6 +18,9 @@ export default function LaunchPage() {
       <div className="mt-12">
         <LaunchForm />
       </div>
+      <section className="mt-24 max-w-3xl">
+        <ProviderSetup />
+      </section>
     </div>
   );
 }

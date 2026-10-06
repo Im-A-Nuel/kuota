@@ -53,6 +53,12 @@ export function estimateCurve(params: LaunchParams): LaunchSimulation {
   };
 }
 
+/** Price on the estimated curve once `progressBps` of the threshold has been filled. */
+export function priceAtProgress(usdcPrice: number, progressBps: number): number {
+  const t = Math.min(1, Math.max(0, progressBps / 10000));
+  return (usdcPrice * (START_BPS + (CEILING_BPS - START_BPS) * t)) / 10000;
+}
+
 export interface LaunchFieldErrors {
   usdcPricePerCall?: string;
   committedCalls?: string;

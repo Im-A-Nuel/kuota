@@ -11,6 +11,32 @@ export function SampleNotice({ what }: { what: string }) {
   );
 }
 
+/** Errors use a mark plus ink text, so they never read as the vermilion action colour. */
+export function AlertMark() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="mt-0.5 shrink-0 text-accent-text"
+    >
+      <path d="M12 3 22 20H2L12 3Z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+      <path d="M12 10v4.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="12" cy="17.2" r="1.2" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ErrorNote({ children, id }: { children: React.ReactNode; id?: string }) {
+  return (
+    <p id={id} className="flex gap-2 text-sm font-semibold">
+      <AlertMark />
+      <span>{children}</span>
+    </p>
+  );
+}
+
 export function EmptyState({
   title,
   body,
@@ -46,18 +72,21 @@ export function ErrorState({
   onRetry?: () => void;
 }) {
   return (
-    <div role="alert" className="rounded-panel border-[1.5px] border-accent-text p-6">
-      <p className="font-display text-xl font-bold text-accent-text">{title}</p>
-      <p className="mt-1 max-w-prose">{body}</p>
-      {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-4 min-h-11 cursor-pointer rounded-control border-[1.5px] border-ink px-4 font-semibold hover:bg-ink hover:text-paper"
-        >
-          Try again
-        </button>
-      )}
+    <div role="alert" className="flex gap-3 rounded-panel border-[3px] border-double border-ink p-6">
+      <AlertMark />
+      <div>
+        <p className="font-display text-xl font-bold">{title}</p>
+        <p className="mt-1 max-w-prose">{body}</p>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-4 min-h-11 cursor-pointer rounded-control border-[1.5px] border-ink px-4 font-semibold hover:bg-ink hover:text-paper"
+          >
+            Try again
+          </button>
+        )}
+      </div>
     </div>
   );
 }
