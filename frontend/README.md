@@ -16,6 +16,7 @@ Environment variables (all optional):
 | `NEXT_PUBLIC_API_URL` | Backend base URL, for example `https://kuota.example/api`. Unset means sample data. |
 | `NEXT_PUBLIC_SOLANA_CLUSTER` | `devnet` (default) or `mainnet-beta` |
 | `NEXT_PUBLIC_SOLANA_RPC` | Custom RPC endpoint |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL, used for absolute Open Graph image links |
 
 Where things live:
 

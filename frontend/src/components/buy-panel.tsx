@@ -71,7 +71,7 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
           <dd className="font-bold">{formatUsdc(retailCost, 2)} USDC</dd>
         </div>
         <div className="flex justify-between gap-4 border-t border-rule pt-2">
-          <dt className="text-mute">Difference</dt>
+          <dt className="text-mute">You save compared with USDC</dt>
           <dd className="font-bold text-teal">{formatUsdc(saving, 2)} USDC</dd>
         </div>
       </dl>

@@ -36,9 +36,9 @@ const kuotaFetch = createKuotaFetch({
 const res = await kuotaFetch("https://api.example/v1/resource");`;
 
 const primaryCta =
-  "inline-flex min-h-12 items-center rounded-control bg-accent px-5 font-bold text-accent-ink hover:brightness-95";
+  "inline-flex min-h-12 items-center justify-center text-center rounded-control bg-accent px-5 font-bold text-accent-ink hover:brightness-95";
 const secondaryCta =
-  "inline-flex min-h-12 items-center rounded-control border-[1.5px] border-ink px-5 font-bold hover:bg-ink hover:text-paper";
+  "inline-flex min-h-12 items-center justify-center text-center rounded-control border-[1.5px] border-ink px-5 font-bold hover:bg-ink hover:text-paper";
 
 export default function HomePage() {
   const sample = mockGetKuota(SAMPLE_MINT)!;
@@ -64,7 +64,7 @@ export default function HomePage() {
             curve. Agents pay with kuota when it costs less than USDC, and every spent kuota is
             burned.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <Link href="/providers" className={primaryCta}>
               Browse live kuota
             </Link>

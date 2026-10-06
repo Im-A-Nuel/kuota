@@ -70,6 +70,9 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
           {formatUsdc(last.priceUsdc)}
         </span>
         <span className="absolute -bottom-6 left-0 text-xs font-semibold text-mute">0 calls sold</span>
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-mute">
+          {formatCount(Math.round(maxX / 2))}
+        </span>
         <span className="absolute -bottom-6 right-0 text-xs font-semibold text-mute">{formatCount(maxX)}</span>
 
         {marker && (
@@ -84,6 +87,14 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
               style={{ left: `${marker.left}%`, top: `${marker.top}%` }}
               aria-hidden="true"
             />
+            <span
+              className={`absolute whitespace-nowrap rounded-control bg-ink px-1.5 py-0.5 text-xs font-bold text-paper ${
+                marker.left > 70 ? "-translate-x-[calc(100%+0.75rem)]" : "translate-x-3"
+              }`}
+              style={{ left: `${marker.left}%`, top: `calc(${marker.top}% + 0.75rem)` }}
+            >
+              now {formatUsdc(marker.price)}
+            </span>
           </>
         )}
       </div>
