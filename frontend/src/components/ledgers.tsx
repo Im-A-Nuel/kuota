@@ -51,7 +51,7 @@ function LoadMore({
         type="button"
         onClick={paged.loadMore}
         disabled={paged.loading}
-        className="min-h-11 cursor-pointer rounded-control border-[1.5px] border-ink px-4 font-semibold hover:bg-ink hover:text-paper disabled:cursor-wait disabled:opacity-60"
+        className="min-h-11 cursor-pointer rounded-full border border-line-strong px-4 font-semibold transition-colors hover:border-accent hover:text-accent disabled:cursor-wait disabled:opacity-60"
       >
         {paged.loading ? "Loading" : label}
       </button>
@@ -98,16 +98,16 @@ export function BurnLedger({ mint, initial }: { mint: string; initial: Page<Burn
 
   return (
     <>
-      <ul className="divide-y divide-rule border-y-[1.5px] border-ink">
+      <ul className="divide-y divide-line border-y border-line">
         {paged.items.map((b) => (
           <li
             key={b.id}
             className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[1fr_auto_auto_auto]"
           >
-            <span className="font-display text-2xl font-bold">
+            <span className="text-2xl font-light">
               {formatCount(wholeUnits(b.amount))} kuota
             </span>
-            <span className="stamp justify-self-end sm:order-last">Redeemed</span>
+            <span className="justify-self-end rounded-full bg-teal-wash px-3 py-1 text-xs font-semibold text-teal sm:order-last">Burned</span>
             <When createdAt={b.createdAt} slot={b.slot} />
             <span className="justify-self-end sm:justify-self-auto">
               <TxLink signature={b.signature} />
@@ -134,7 +134,7 @@ export function PaymentList({ mint, initial }: { mint: string; initial: Page<Set
 
   return (
     <>
-      <ul className="divide-y divide-rule border-y-[1.5px] border-ink">
+      <ul className="divide-y divide-line border-y border-line">
         {paged.items.map((s) => (
           <li
             key={s.id}

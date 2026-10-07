@@ -30,9 +30,9 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
   return (
     <section
       aria-labelledby={`${groupId}-title`}
-      className="rounded-panel border-[1.5px] border-ink bg-card p-5 shadow-[5px_5px_0_var(--ink)]"
+      className="rounded-panel border border-line bg-paper p-5 shadow-[0_30px_60px_-36px_rgba(14,19,48,0.45)]"
     >
-      <h2 id={`${groupId}-title`} className="text-2xl font-extrabold">
+      <h2 id={`${groupId}-title`} className="text-2xl font-light">
         Buy {symbol}
       </h2>
 
@@ -49,7 +49,7 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
                 onChange={() => setUsd(a)}
                 className="peer sr-only"
               />
-              <span className="flex min-h-12 cursor-pointer items-center justify-center rounded-control border-[1.5px] border-ink font-bold peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink hover:bg-teal-wash peer-checked:hover:bg-ink">
+              <span className="flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-line-strong font-semibold peer-checked:border-accent peer-checked:bg-accent peer-checked:text-accent-ink peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink hover:border-accent">
                 ${a}
               </span>
             </label>
@@ -60,19 +60,19 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
       <dl className="mt-5 space-y-2 text-sm">
         <div className="flex justify-between gap-4">
           <dt className="text-mute">You get about</dt>
-          <dd className="font-bold">{formatCount(calls)} kuota</dd>
+          <dd className="font-semibold">{formatCount(calls)} kuota</dd>
         </div>
         <div className="flex justify-between gap-4">
           <dt className="text-mute">Calls on {endpointHost}</dt>
-          <dd className="font-bold">{formatCount(calls)}</dd>
+          <dd className="font-semibold">{formatCount(calls)}</dd>
         </div>
         <div className="flex justify-between gap-4">
           <dt className="text-mute">Same calls paid in USDC</dt>
-          <dd className="font-bold">{formatUsdc(retailCost, 2)} USDC</dd>
+          <dd className="font-semibold">{formatUsdc(retailCost, 2)} USDC</dd>
         </div>
-        <div className="flex justify-between gap-4 border-t border-rule pt-2">
+        <div className="flex justify-between gap-4 border-t border-line pt-2">
           <dt className="text-mute">You save compared with USDC</dt>
-          <dd className="font-bold text-teal">{formatUsdc(saving, 2)} USDC</dd>
+          <dd className="font-semibold text-teal">{formatUsdc(saving, 2)} USDC</dd>
         </div>
       </dl>
       <p className="mt-2 text-xs text-mute">
@@ -86,7 +86,7 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
           <button
             type="button"
             disabled
-            className="mt-5 min-h-12 w-full cursor-not-allowed rounded-control border-[1.5px] border-dashed border-ink px-4 font-bold text-mute"
+            className="mt-5 min-h-12 w-full cursor-not-allowed rounded-full border border-dashed border-line-strong px-4 font-semibold text-mute"
           >
             Buy ${usd} of kuota
           </button>
@@ -99,7 +99,7 @@ export function BuyPanel({ symbol, priceKuotaUsdc, usdcPrice, endpointHost, grad
           type="button"
           onClick={open}
           aria-haspopup="dialog"
-          className="mt-5 min-h-12 w-full cursor-pointer rounded-control bg-accent px-4 font-bold text-accent-ink hover:brightness-95"
+          className="mt-5 min-h-12 w-full cursor-pointer rounded-full bg-accent px-4 font-semibold text-accent-ink hover:bg-accent-deep"
         >
           Connect wallet to buy
         </button>

@@ -55,14 +55,14 @@ export const WalletDialog = forwardRef<WalletDialogHandle, Props>(function Walle
     <dialog
       ref={el}
       aria-labelledby="wallet-dialog-title"
-      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-panel border-[1.5px] border-ink bg-card p-0 text-ink"
+      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-panel border border-line bg-paper p-0 text-ink"
       onClick={(e) => {
         if (e.target === el.current) el.current?.close();
       }}
     >
-      <div className="flex items-start justify-between gap-4 border-b border-rule p-5">
+      <div className="flex items-start justify-between gap-4 border-b border-line p-5">
         <div>
-          <h2 id="wallet-dialog-title" className="text-2xl font-bold">
+          <h2 id="wallet-dialog-title" className="text-2xl font-light">
             {publicKey ? "Wallet connected" : "Connect a wallet"}
           </h2>
           <p className="mt-1 text-sm text-mute">Network: Solana {cluster}</p>
@@ -70,7 +70,7 @@ export const WalletDialog = forwardRef<WalletDialogHandle, Props>(function Walle
         <button
           type="button"
           onClick={() => el.current?.close()}
-          className="min-h-11 min-w-11 cursor-pointer rounded-control border border-rule px-3 text-sm font-semibold hover:border-ink"
+          className="min-h-11 min-w-11 cursor-pointer rounded-control border border-line px-3 text-sm font-semibold hover:border-ink"
         >
           Close
         </button>
@@ -86,7 +86,7 @@ export const WalletDialog = forwardRef<WalletDialogHandle, Props>(function Walle
             <button
               type="button"
               onClick={onDisconnect}
-              className="min-h-11 w-full cursor-pointer rounded-control border-[1.5px] border-ink px-4 font-semibold hover:bg-ink hover:text-paper"
+              className="min-h-11 w-full cursor-pointer rounded-full border border-line-strong px-4 font-semibold transition-colors hover:border-accent hover:text-accent"
             >
               Disconnect
             </button>
@@ -112,7 +112,7 @@ export const WalletDialog = forwardRef<WalletDialogHandle, Props>(function Walle
                       select(w.adapter.name);
                     }
                   }}
-                  className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-control border-[1.5px] border-ink px-4 text-left font-semibold hover:bg-ink hover:text-paper"
+                  className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-full border border-line-strong px-4 text-left font-semibold transition-colors hover:border-accent hover:text-accent"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={w.adapter.icon} alt="" width={24} height={24} />

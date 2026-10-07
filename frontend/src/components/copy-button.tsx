@@ -5,7 +5,7 @@ import { useState } from "react";
 export function CopyButton({
   text,
   label,
-  className = "",
+  className = "border-line-strong text-ink hover:border-accent hover:text-accent",
 }: {
   text: string;
   label: string;
@@ -27,7 +27,7 @@ export function CopyButton({
     <button
       type="button"
       onClick={copy}
-      className={`inline-flex min-h-11 cursor-pointer items-center rounded-control border-[1.5px] border-ink bg-card px-3 text-sm font-semibold hover:bg-ink hover:text-paper ${className}`}
+      className={`inline-flex min-h-11 cursor-pointer items-center rounded-full border px-4 text-sm font-semibold transition-colors ${className}`}
     >
       <span aria-live="polite">
         {state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}

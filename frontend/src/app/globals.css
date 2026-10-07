@@ -1,29 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f4eddd;
-  --card: #fbf7ec;
-  --ink: #1c1a15;
-  --mute: #5c5648;
-  --teal: #0d5a4b;
-  --teal-wash: #dce8dc;
-  --accent: #c93c12;
+  --paper: #ffffff;
+  --card: #f4f6ff;
+  --ink: #0e1330;
+  --mute: #585e7a;
+  --line: #e3e6f2;
+  --line-strong: #7e85a6;
+  --accent: #2340ff;
+  --accent-deep: #0b1fb8;
   --accent-ink: #ffffff;
-  --accent-text: #b5340e;
-  --rule: rgb(28 26 21 / 0.22);
+  --accent-wash: #eef1ff;
+  --teal: #0a7a3c;
+  --teal-wash: #e3f5ea;
 }
 
 :root[data-theme="dark"] {
-  --paper: #17150f;
-  --card: #211e17;
-  --ink: #f2ebda;
-  --mute: #b3aa96;
-  --teal: #6fc9af;
-  --teal-wash: #17302a;
-  --accent: #ff7a4d;
-  --accent-ink: #1c1a15;
-  --accent-text: #ff7a4d;
-  --rule: rgb(242 235 218 / 0.24);
+  --paper: #070b24;
+  --card: #10163a;
+  --ink: #f3f5ff;
+  --mute: #a3aacb;
+  --line: #232a55;
+  --line-strong: #6e78a0;
+  --accent: #7a8cff;
+  --accent-deep: #2340ff;
+  --accent-ink: #070b24;
+  --accent-wash: #161e4d;
+  --teal: #3ddc84;
+  --teal-wash: #0f2e24;
 }
 
 @theme inline {
@@ -31,140 +35,77 @@
   --color-card: var(--card);
   --color-ink: var(--ink);
   --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-wash: var(--accent-wash);
   --color-teal: var(--teal);
   --color-teal-wash: var(--teal-wash);
-  --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
-  --color-accent-text: var(--accent-text);
-  --color-rule: var(--rule);
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --radius-panel: 6px;
-  --radius-control: 4px;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --radius-panel: 24px;
+  --radius-control: 12px;
 }
 
-html {
-  background: var(--paper);
-  color-scheme: light;
+/* Base rules live in the base layer so Tailwind utilities can override them. */
+@layer base {
+  html {
+    background: var(--paper);
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
 }
 
-html[data-theme="dark"] {
-  color-scheme: dark;
-}
-
-body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.55;
-  font-variant-numeric: tabular-nums;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-
-p {
-  text-wrap: pretty;
-}
-
-:focus-visible {
-  outline: 3px solid var(--ink);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-::selection {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
-/* Voucher ticket: body on the left, stub on the right, perforation between. */
-.ticket {
+/* Brand band: the one gradient surface. Text on it is white at 6.5:1 or better. */
+.brand-band {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
   overflow: hidden;
-  background: var(--card);
-  border: 1.5px solid var(--ink);
-  border-radius: var(--radius-panel);
+  color: #ffffff;
+  background: linear-gradient(115deg, #2340ff 0%, #1a2fe6 45%, #0b1fb8 100%);
 }
 
-.ticket-stub {
+/* Content sits above the decorative wave layer (the aria-hidden svg stays absolute). */
+.brand-band > :not([aria-hidden="true"]) {
   position: relative;
-  border-top: 2px dashed var(--ink);
-  padding: 1rem 1.25rem;
-}
-
-.ticket-stub::before,
-.ticket-stub::after {
-  content: "";
-  position: absolute;
-  top: -11px;
-  width: 20px;
-  height: 20px;
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-}
-
-.ticket-stub::before {
-  left: -11px;
-}
-
-.ticket-stub::after {
-  right: -11px;
-}
-
-@media (min-width: 40rem) {
-  .ticket {
-    grid-template-columns: 1fr 9.5rem;
-  }
-
-  .ticket-stub {
-    border-top: 0;
-    border-left: 2px dashed var(--ink);
-    padding: 1.25rem 1rem;
-  }
-
-  .ticket-stub::before,
-  .ticket-stub::after {
-    left: -11px;
-    right: auto;
-  }
-
-  .ticket-stub::before {
-    top: -11px;
-  }
-
-  .ticket-stub::after {
-    top: auto;
-    bottom: -11px;
-  }
-}
-
-/* Rubber stamp on burned ledger rows. Uppercase is the point: it imitates a stamp. */
-.stamp {
-  display: inline-block;
-  transform: rotate(-5deg);
-  padding: 0.1rem 0.5rem;
-  border: 2px solid var(--teal);
-  border-radius: 3px;
-  color: var(--teal);
-  font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  line-height: 1.3;
-  white-space: nowrap;
 }
 
 .fill-in {
@@ -179,20 +120,14 @@ p {
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--rule),
-    transparent 50%,
-    var(--rule)
-  );
-  background-size: 200% 100%;
-  animation: sweep 1.4s linear infinite;
+  background: var(--card);
   border-radius: var(--radius-control);
+  animation: pulse 1.4s ease-in-out infinite;
 }
 
-@keyframes sweep {
-  to {
-    background-position: -200% 0;
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
   }
 }
 
@@ -209,5 +144,5 @@ p {
 }
 
 dialog::backdrop {
-  background: rgb(28 26 21 / 0.55);
+  background: rgb(7 11 36 / 0.6);
 }

@@ -3,11 +3,12 @@ import { ImageResponse } from "next/og";
 export const ogSize = { width: 1200, height: 630 };
 
 // Same tokens as globals.css (light theme). Satori cannot read CSS variables.
-const PAPER = "#f4eddd";
-const CARD = "#fbf7ec";
-const INK = "#1c1a15";
-const MUTE = "#5c5648";
-const ACCENT = "#c93c12";
+// ACCENT here is the discount green, as on the token card.
+const PAPER = "#2340ff";
+const CARD = "#ffffff";
+const INK = "#0e1330";
+const MUTE = "#585e7a";
+const ACCENT = "#0a7a3c";
 
 interface VoucherImage {
   symbol: string;
@@ -18,12 +19,12 @@ interface VoucherImage {
   note: string;
 }
 
-/** Share image in the voucher style: ticket body, perforation, stub. */
+/** Share image: white token card on the brand blue, matching the site. */
 export function voucherImage(v: VoucherImage) {
   return new ImageResponse(
     (
       <div style={{ display: "flex", width: "100%", height: "100%", background: PAPER, padding: 56, color: INK }}>
-        <div style={{ display: "flex", flex: 1, background: CARD, border: `4px solid ${INK}`, borderRadius: 14 }}>
+        <div style={{ display: "flex", flex: 1, background: CARD, borderRadius: 28 }}>
           <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "40px 48px" }}>
             <div style={{ fontSize: 30, color: MUTE }}>{v.symbol}</div>
             <div style={{ display: "block", fontSize: 60, fontWeight: 800, marginTop: 4, maxWidth: 760, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -48,11 +49,11 @@ export function voucherImage(v: VoucherImage) {
               flexDirection: "column",
               justifyContent: "center",
               width: 230,
-              borderLeft: `4px dashed ${INK}`,
+              borderLeft: "3px dashed #c9d2ff",
               padding: 32,
             }}
           >
-            <div style={{ fontSize: 56, fontWeight: 800 }}>kuota</div>
+            <div style={{ fontSize: 56, fontWeight: 800, color: "#2340ff" }}>kuota</div>
             <div style={{ fontSize: 26, color: MUTE, marginTop: 12 }}>1 kuota = 1 API call</div>
           </div>
         </div>

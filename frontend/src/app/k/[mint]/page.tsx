@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps<"/k/[mint]">): Prom
 }
 
 const outlineLink =
-  "inline-flex min-h-11 items-center rounded-control border-[1.5px] border-ink px-3 text-sm font-semibold hover:bg-ink hover:text-paper";
+  "inline-flex min-h-11 items-center rounded-full border border-line-strong px-3 text-sm font-semibold transition-colors hover:border-accent hover:text-accent";
 
 export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
   const { mint } = await params;
@@ -99,14 +99,14 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
 
       <div className="min-w-0 space-y-16 lg:col-span-8">
         <section aria-labelledby="specs">
-          <h2 id="specs" className="text-3xl font-extrabold">
+          <h2 id="specs" className="text-3xl font-light">
             The numbers
           </h2>
-          <dl className="mt-4 grid border-t-[1.5px] border-ink sm:grid-cols-2 sm:gap-x-10">
+          <dl className="mt-4 grid border-t border-line sm:grid-cols-2 sm:gap-x-10">
             {specs.map(([term, value]) => (
-              <div key={term} className="flex justify-between gap-4 border-b border-rule py-3">
+              <div key={term} className="flex justify-between gap-4 border-b border-line py-3">
                 <dt className="text-mute">{term}</dt>
-                <dd className="text-right font-bold">{value}</dd>
+                <dd className="text-right font-semibold">{value}</dd>
               </div>
             ))}
           </dl>
@@ -114,7 +114,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
 
         {graduated ? (
           <section aria-labelledby="market">
-            <h2 id="market" className="text-3xl font-extrabold">
+            <h2 id="market" className="text-3xl font-light">
               Trading on DAMM v2
             </h2>
             <p className="mt-2 max-w-prose">
@@ -127,7 +127,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
                 href={jupiterSwap(kuota.mint)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 items-center rounded-control bg-accent px-4 font-bold text-accent-ink hover:brightness-95"
+                className="inline-flex min-h-11 items-center rounded-full bg-accent px-4 font-semibold text-accent-ink hover:bg-accent-deep"
               >
                 Swap on Jupiter
               </a>
@@ -140,7 +140,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </section>
         ) : (
           <section aria-labelledby="curve">
-            <h2 id="curve" className="mb-4 text-3xl font-extrabold">
+            <h2 id="curve" className="mb-4 text-3xl font-light">
               Where the curve stands
             </h2>
             <CurveChart
@@ -153,7 +153,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
         )}
 
         <section aria-labelledby="burns">
-          <h2 id="burns" className="text-3xl font-extrabold">
+          <h2 id="burns" className="text-3xl font-light">
             Burn ledger
           </h2>
           <p className="mt-2 max-w-prose text-mute">
@@ -166,7 +166,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
         </section>
 
         <section aria-labelledby="settlements">
-          <h2 id="settlements" className="text-3xl font-extrabold">
+          <h2 id="settlements" className="text-3xl font-light">
             Recent payments
           </h2>
           <div className="mt-4">
@@ -177,12 +177,12 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </p>
         </section>
 
-        <details className="group rounded-panel border-[1.5px] border-ink bg-card">
-          <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 px-5 py-3 font-display text-xl font-bold">
+        <details className="group rounded-panel border border-line bg-paper">
+          <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 px-5 py-3 text-xl font-light">
             Running this endpoint? Set it up to accept kuota
             <span aria-hidden="true" className="text-2xl leading-none group-open:rotate-45">+</span>
           </summary>
-          <div className="border-t border-rule p-5">
+          <div className="border-t border-line p-5">
             <ProviderSetup
               mint={kuota.isSample ? null : kuota.mint}
               usdcPrice={kuota.usdcPrice}

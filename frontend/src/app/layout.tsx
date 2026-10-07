@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Public_Sans } from "next/font/google";
+import { Hanken_Grotesk } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { KuotaWalletProvider } from "@/components/wallet-provider";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
-});
-
-const body = Public_Sans({
-  variable: "--font-public-sans",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable}`}
+      className={hanken.variable}
       suppressHydrationWarning
     >
       <head>
@@ -42,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-screen flex-col">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:rounded-control focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-accent-ink"
         >
           Skip to content
         </a>

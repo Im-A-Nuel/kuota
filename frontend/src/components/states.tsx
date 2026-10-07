@@ -1,26 +1,22 @@
 import Link from "next/link";
+import { btnPrimary, btnSecondary } from "@/lib/ui";
 
 export function SampleNotice({ what }: { what: string }) {
   return (
-    <p
-      role="note"
-      className="rounded-control border-[1.5px] border-dashed border-ink bg-card px-3 py-2 text-sm"
-    >
-      <strong>Sample data.</strong> {what} No backend is connected, so nothing here is on-chain.
+    <p role="note" className="flex gap-3 rounded-control bg-accent-wash px-4 py-3 text-sm">
+      <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-accent" />
+      <span>
+        <strong className="font-semibold">Sample data.</strong> {what} No backend is connected, so
+        nothing here is on-chain.
+      </span>
     </p>
   );
 }
 
-/** Errors use a mark plus ink text, so they never read as the vermilion action colour. */
+/** Errors use a mark plus ink text, so they never read as the blue action colour. */
 export function AlertMark() {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="mt-0.5 shrink-0 text-accent-text"
-    >
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 shrink-0 text-ink">
       <path d="M12 3 22 20H2L12 3Z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
       <path d="M12 10v4.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
       <circle cx="12" cy="17.2" r="1.2" fill="currentColor" />
@@ -47,14 +43,11 @@ export function EmptyState({
   action?: { href: string; label: string };
 }) {
   return (
-    <div className="rounded-panel border-[1.5px] border-dashed border-ink p-6">
-      <p className="font-display text-xl font-bold">{title}</p>
-      <p className="mt-1 max-w-prose text-mute">{body}</p>
+    <div className="rounded-panel border border-dashed border-line-strong p-8">
+      <p className="text-2xl font-light">{title}</p>
+      <p className="mt-2 max-w-prose text-mute">{body}</p>
       {action && (
-        <Link
-          href={action.href}
-          className="mt-4 inline-flex min-h-11 items-center rounded-control bg-accent px-4 font-bold text-accent-ink hover:brightness-95"
-        >
+        <Link href={action.href} className={`${btnPrimary} mt-5`}>
           {action.label}
         </Link>
       )}
@@ -72,17 +65,13 @@ export function ErrorState({
   onRetry?: () => void;
 }) {
   return (
-    <div role="alert" className="flex gap-3 rounded-panel border-[3px] border-double border-ink p-6">
+    <div role="alert" className="flex gap-3 rounded-panel border-2 border-ink p-6">
       <AlertMark />
       <div>
-        <p className="font-display text-xl font-bold">{title}</p>
-        <p className="mt-1 max-w-prose">{body}</p>
+        <p className="text-xl font-normal">{title}</p>
+        <p className="mt-1 max-w-prose text-mute">{body}</p>
         {onRetry && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="mt-4 min-h-11 cursor-pointer rounded-control border-[1.5px] border-ink px-4 font-semibold hover:bg-ink hover:text-paper"
-          >
+          <button type="button" onClick={onRetry} className={`${btnSecondary} mt-4`}>
             Try again
           </button>
         )}
@@ -95,7 +84,7 @@ export function SkeletonLines({ count = 3, label }: { count?: number; label: str
   return (
     <div role="status" aria-label={label} className="space-y-3">
       {Array.from({ length: count }, (_, i) => (
-        <div key={i} className="skeleton h-5" style={{ width: `${92 - i * 14}%` }} />
+        <div key={i} className="skeleton h-6" style={{ width: `${92 - i * 14}%` }} />
       ))}
     </div>
   );

@@ -51,14 +51,14 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
           aria-hidden="true"
         >
           <polygon points={gap} fill="var(--teal-wash)" />
-          <line x1="0" x2={W} y1={redeemY} y2={redeemY} stroke="var(--ink)" strokeWidth="1.5" strokeDasharray="6 5" vectorEffect="non-scaling-stroke" />
-          <polyline points={line} fill="none" stroke="var(--ink)" strokeWidth="3" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-          <line x1="0" x2="0" y1="0" y2={H} stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-          <line x1="0" x2={W} y1={H} y2={H} stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+          <line x1="0" x2={W} y1={redeemY} y2={redeemY} stroke="var(--mute)" strokeWidth="1.5" strokeDasharray="6 5" vectorEffect="non-scaling-stroke" />
+          <polyline points={line} fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <line x1="0" x2="0" y1="0" y2={H} stroke="var(--line-strong)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+          <line x1="0" x2={W} y1={H} y2={H} stroke="var(--line-strong)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
         </svg>
 
         <span
-          className="absolute right-0 text-xs font-bold"
+          className="absolute right-0 text-xs font-semibold text-mute"
           style={{ top: `calc(${(redeemY / H) * 100}% - 1.5rem)` }}
         >
           USDC price {formatUsdc(usdcPrice)}
@@ -78,17 +78,17 @@ export function CurveChart({ points, usdcPrice, soldNow, title }: Props) {
         {marker && (
           <>
             <span
-              className="absolute top-0 h-full w-px bg-ink"
+              className="absolute top-0 h-full w-px bg-line-strong"
               style={{ left: `${marker.left}%` }}
               aria-hidden="true"
             />
             <span
-              className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card bg-ink"
+              className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-paper bg-accent shadow-[0_0_0_1px_var(--accent)]"
               style={{ left: `${marker.left}%`, top: `${marker.top}%` }}
               aria-hidden="true"
             />
             <span
-              className={`absolute whitespace-nowrap rounded-control bg-ink px-1.5 py-0.5 text-xs font-bold text-paper ${
+              className={`absolute whitespace-nowrap rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-ink ${
                 marker.left > 70 ? "-translate-x-[calc(100%+0.75rem)]" : "translate-x-3"
               }`}
               style={{ left: `${marker.left}%`, top: `calc(${marker.top}% + 0.75rem)` }}

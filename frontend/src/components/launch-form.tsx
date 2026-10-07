@@ -9,10 +9,9 @@ import { ApiError, type BuildLaunchResult } from "@/lib/types";
 import { CurveChart } from "./curve-chart";
 import { ErrorNote, ErrorState } from "./states";
 import { Voucher } from "./voucher";
+import { input } from "@/lib/ui";
 import { useWalletDialog } from "./wallet-provider";
 
-const input =
-  "mt-1 min-h-12 w-full rounded-control border-[1.5px] border-ink bg-paper px-3 text-base placeholder:text-mute aria-[invalid=true]:border-[3px]";
 
 function Field({
   label,
@@ -82,21 +81,21 @@ function LaunchSteps({ connected, phase }: { connected: boolean; phase: Phase })
   ];
 
   return (
-    <ol aria-label="Launch progress" className="border-t-[1.5px] border-ink">
+    <ol aria-label="Launch progress" className="border-t border-line">
       {steps.map(([title, body, status], i) => (
         <li
           key={title}
           aria-current={status === "current" ? "step" : undefined}
-          className={`grid grid-cols-[1.75rem_1fr_auto] items-baseline gap-x-3 border-b border-rule py-3 ${
+          className={`grid grid-cols-[1.75rem_1fr_auto] items-baseline gap-x-3 border-b border-line py-3 ${
             status === "waiting" || status === "soon" ? "text-mute" : ""
           }`}
         >
-          <span className="font-display text-lg font-extrabold">{i + 1}</span>
+          <span className="text-lg font-light">{i + 1}</span>
           <span>
-            <span className="block text-sm font-bold">{title}</span>
+            <span className="block text-sm font-semibold">{title}</span>
             <span className="block text-sm">{body}</span>
           </span>
-          <span className={`text-sm font-bold ${status === "done" ? "text-teal" : ""}`}>
+          <span className={`text-sm font-semibold ${status === "done" ? "text-teal" : ""}`}>
             {STATUS_TEXT[status]}
           </span>
         </li>
@@ -204,7 +203,7 @@ export function LaunchForm() {
     <form ref={formRef} onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-12 lg:grid-cols-12">
       <div className="space-y-10 lg:col-span-6">
         <fieldset className="space-y-5">
-          <legend className="font-display text-3xl font-extrabold">Pricing and supply</legend>
+          <legend className="text-3xl font-light">Pricing and supply</legend>
           <Field label="Price of one call in USDC" hint="What a caller pays today with USDC." error={show("usdcPricePerCall")}>
             {(p) => <input {...field(p)} inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} />}
           </Field>
@@ -220,7 +219,7 @@ export function LaunchForm() {
         </fieldset>
 
         <fieldset className="space-y-5">
-          <legend className="font-display text-3xl font-extrabold">Token and endpoint</legend>
+          <legend className="text-3xl font-light">Token and endpoint</legend>
           <Field label="Token name" error={show("name")}>
             {(p) => <input {...field(p)} value={name} onChange={(e) => setName(e.target.value)} placeholder="Your token name" autoComplete="off" />}
           </Field>
@@ -257,23 +256,23 @@ export function LaunchForm() {
                   preview: true,
                 }}
               />
-              <div className="rounded-panel border-[1.5px] border-ink bg-card p-5">
+              <div className="rounded-panel border border-line bg-paper p-5">
                 <CurveChart title="Your price curve (estimate)" points={simulation.curve} usdcPrice={priceNum} />
               </div>
-              <dl className="border-t-[1.5px] border-ink text-sm">
+              <dl className="border-t border-line text-sm">
                 {[
                   ["Buyers’ discount", `${simulation.discountStartBps / 100}% at the start, ${simulation.discountEndBps / 100}% at the end`],
                   ["Calls sold at graduation", formatCount(simulation.callsSoldAtThreshold)],
                   ["Migration fee paid to you", `${formatUsdc(feeUsdc, 2)} USDC`],
                 ].map(([t, v]) => (
-                  <div key={t} className="flex justify-between gap-4 border-b border-rule py-2">
+                  <div key={t} className="flex justify-between gap-4 border-b border-line py-2">
                     <dt className="text-mute">{t}</dt>
-                    <dd className="text-right font-bold">{v}</dd>
+                    <dd className="text-right font-semibold">{v}</dd>
                   </div>
                 ))}
               </dl>
               {simulation.warnings.map((w) => (
-                <div key={w} className="rounded-control border-[1.5px] border-ink p-3">
+                <div key={w} className="rounded-control border border-line-strong p-3">
                   <ErrorNote>{w}</ErrorNote>
                 </div>
               ))}
@@ -283,8 +282,8 @@ export function LaunchForm() {
               </p>
             </>
           ) : (
-            <div className="rounded-panel border-[1.5px] border-dashed border-ink p-6">
-              <p className="font-display text-xl font-bold">No preview yet</p>
+            <div className="rounded-panel border border-dashed border-line-strong p-6">
+              <p className="text-xl font-light">No preview yet</p>
               <p className="mt-1 text-mute">
                 Fix the pricing and supply fields to see your voucher and curve.
               </p>
@@ -295,7 +294,7 @@ export function LaunchForm() {
             <button
               type="submit"
               disabled={building}
-              className="min-h-12 w-full cursor-pointer rounded-control bg-accent px-4 font-bold text-accent-ink hover:brightness-95 disabled:cursor-wait disabled:opacity-70"
+              className="min-h-12 w-full cursor-pointer rounded-full bg-accent px-4 font-semibold text-accent-ink hover:bg-accent-deep disabled:cursor-wait disabled:opacity-70"
             >
               {building ? "Building transactions" : publicKey ? "Build launch transactions" : "Connect wallet to launch"}
             </button>
@@ -325,8 +324,8 @@ export function LaunchForm() {
             />
           )}
           {phase.kind === "built" && (
-            <div role="status" className="rounded-panel border-[1.5px] border-teal p-5">
-              <p className="font-display text-xl font-bold text-teal">
+            <div role="status" className="rounded-panel border border-teal p-5">
+              <p className="text-xl font-light text-teal">
                 {phase.result.transactions.length} transactions are ready.
               </p>
               <p className="mt-1 text-sm">Signing them in your wallet is coming soon.</p>

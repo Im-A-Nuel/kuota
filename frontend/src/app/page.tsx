@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { CurveChart } from "@/components/curve-chart";
-import { SampleNotice } from "@/components/states";
-import { Voucher } from "@/components/voucher";
+import { HeroLoop } from "@/components/hero-loop";
+import { ArrowBadge, ArrowRight, CheckDot } from "@/components/icons";
 import { usingSampleData } from "@/lib/api";
 import { estimateCurve } from "@/lib/curve";
 import { wholeUnits } from "@/lib/format";
 import { mockGetBurns, mockGetKuota, SAMPLE_MINT } from "@/lib/mock-data";
+import { btnOnBrand, btnOnBrandOutline, btnPrimary, btnSecondary, chip, sectionX } from "@/lib/ui";
 
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
@@ -35,10 +36,49 @@ const kuotaFetch = createKuotaFetch({
 // Same call as fetch. Payment is handled on the 402.
 const res = await kuotaFetch("https://api.example/v1/resource");`;
 
-const primaryCta =
-  "inline-flex min-h-12 items-center justify-center text-center rounded-control bg-accent px-5 font-bold text-accent-ink hover:brightness-95";
-const secondaryCta =
-  "inline-flex min-h-12 items-center justify-center text-center rounded-control border-[1.5px] border-ink px-5 font-bold hover:bg-ink hover:text-paper";
+const STACK = ["Solana", "Meteora DBC", "DAMM v2", "x402", "Jupiter"];
+
+// Protocol facts, not traction. Each one comes from docs/ARCHITECTURE.md or docs/SCHEMA.md.
+const FACTS = [
+  { value: "1 : 1", label: "One kuota pays for one call. Supply equals the calls a provider commits." },
+  { value: "50 to 85%", label: "Of the USDC price while the curve runs. Never above it." },
+  { value: "10 min", label: "Between burns. Burned supply always equals calls served." },
+];
+
+function ProvidersIcon() {
+  return (
+    <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">
+      <circle cx="16" cy="16" r="10" fill="var(--accent)" />
+      <circle cx="32" cy="16" r="10" fill="none" stroke="var(--accent)" strokeWidth="2" />
+      <circle cx="16" cy="32" r="10" fill="none" stroke="var(--accent)" strokeWidth="2" />
+      <circle cx="32" cy="32" r="10" fill="none" stroke="var(--accent)" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function AgentsIcon() {
+  return (
+    <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">
+      <defs>
+        <linearGradient id="cap-coin" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#c9d2ff" />
+          <stop offset="1" stopColor="var(--accent)" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="24" cy="24" rx="12" ry="18" transform="rotate(-35 24 24)" fill="url(#cap-coin)" />
+      <ellipse cx="24" cy="24" rx="6" ry="12" transform="rotate(-35 24 24)" fill="none" stroke="#ffffff" strokeOpacity="0.8" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function LedgerIcon() {
+  return (
+    <svg viewBox="0 0 48 48" width="44" height="44" fill="none" aria-hidden="true">
+      <path d="M6 30c6-12 14-12 18 0s12 12 18 0" stroke="var(--line-strong)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M6 22c6-12 14-12 18 0s12 12 18 0" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function HomePage() {
   const sample = mockGetKuota(SAMPLE_MINT)!;
@@ -50,131 +90,216 @@ export default function HomePage() {
     migrationFeeBps: 3000,
   });
   const soldNow = Math.round(simulation.callsSoldAtThreshold * (sample.curveProgressBps / 10000));
+  const ledgerHref = usingSampleData ? `/k/${SAMPLE_MINT}` : "/providers";
+
+  const capabilities = [
+    {
+      icon: <ProvidersIcon />,
+      title: "Pre-sell capacity",
+      body: "Providers turn the calls they can serve into a fixed-supply token. Early buyers get a discount, the provider earns trading fees from the first minute and capital at graduation.",
+      href: "/launch",
+      link: "See the launch flow",
+    },
+    {
+      icon: <AgentsIcon />,
+      title: "Pay the cheaper price",
+      body: "Agents swap fetch for kuotaFetch. On every 402 it compares one kuota with the USDC price and pays whichever costs less, inside an hourly budget.",
+      href: "#agents",
+      link: "See the agent client",
+    },
+    {
+      icon: <LedgerIcon />,
+      title: "Burned in public",
+      body: "Every kuota spent on a call is burned within 10 minutes, and every burn gets a row in a public ledger anyone can re-check.",
+      href: ledgerHref,
+      link: usingSampleData ? "Open the sample ledger" : "Open a live ledger",
+    },
+  ];
 
   return (
     <>
-      {/* Hero: copy left, the product itself (a voucher) right. */}
-      <section className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 pb-4 pt-12 sm:px-6 lg:grid-cols-12 lg:items-center lg:pt-20">
-        <div className="lg:col-span-5">
-          <h1 className="text-5xl font-extrabold sm:text-6xl">
-            Buy API calls before you need them.
+      {/* Hero */}
+      <section className={`${sectionX} pt-14 sm:pt-20`}>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
+          <h1 className="text-5xl font-light sm:text-6xl lg:col-span-7 lg:text-7xl">
+            Turn API capacity into{" "}
+            <span className="bg-gradient-to-r from-accent to-teal bg-clip-text text-transparent">
+              prepaid calls
+            </span>
           </h1>
-          <p className="mt-5 max-w-prose text-lg">
-            One kuota is one call on an x402 API. Providers sell capacity up front on a bonding
-            curve. Agents pay with kuota when it costs less than USDC, and every spent kuota is
-            burned.
-          </p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Link href="/providers" className={primaryCta}>
-              Browse live kuota
-            </Link>
-            <Link href="/launch" className={secondaryCta}>
-              Launch a kuota for your API
-            </Link>
-          </div>
-        </div>
-        <div className="lg:col-span-7">
-          <Voucher data={sample} />
-          <div className="mt-3 space-y-2">
-            <SampleNotice what="This voucher uses the worked example from the project docs." />
-            {usingSampleData && (
-              <Link
-                href={`/k/${SAMPLE_MINT}`}
-                className="inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4"
-              >
-                Open the full sample token page
+          <div className="lg:col-span-5 lg:pt-3">
+            <p className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-ink">New</span>
+              <span className="text-mute">Built for x402 APIs on Solana</span>
+            </p>
+            <p className="mt-4 text-lg text-mute">
+              One kuota is one call on an x402 API. Providers sell capacity up front on a bonding
+              curve, agents pay with kuota when it costs less than USDC, and every spent kuota is{" "}
+              <span className="font-semibold text-accent">burned</span>.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/providers" className={btnPrimary}>
+                Browse live kuota
+                <ArrowBadge />
               </Link>
-            )}
+              <Link href="/launch" className={btnSecondary}>
+                Launch a kuota
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative mt-8 md:mt-4">
+          <div className="mx-auto max-w-3xl">
+            <HeroLoop />
+          </div>
+          <div className="mt-2 flex justify-between gap-4 text-2xl font-light md:absolute md:inset-0 md:mt-0 md:block md:text-3xl">
+            <p className="text-teal md:absolute md:left-0 md:top-[44%]">Up to 50% off</p>
+            <p className="text-right text-accent md:absolute md:right-0 md:top-[66%]">1 kuota = 1 call</p>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-6 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs text-mute">Built on</p>
+            <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+              {STACK.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </div>
+          <ul className="flex flex-wrap gap-2">
+            {["Prepaid", "Tradeable", "Burned when spent"].map((t) => (
+              <li key={t} className={`${chip} text-ink`}>
+                <CheckDot className="text-accent" />
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Facts band */}
+      <section className={`${sectionX} mt-16`} aria-label="How kuota is set up">
+        <div className="brand-band grid grid-cols-1 gap-8 rounded-panel p-4 sm:p-6 lg:grid-cols-4 lg:items-center">
+          <svg
+            viewBox="0 0 1200 300"
+            preserveAspectRatio="none"
+            className="pointer-events-none absolute inset-0 size-full"
+            aria-hidden="true"
+          >
+            <path d="M0 220 C300 120 500 320 800 180 S1100 60 1200 120" fill="none" stroke="#ffffff" strokeOpacity="0.14" strokeWidth="60" />
+            <path d="M0 120 C260 40 520 260 820 110 S1120 0 1200 40" fill="none" stroke="#ffffff" strokeOpacity="0.08" strokeWidth="90" />
+          </svg>
+          <div className="rounded-[18px] bg-[#0b1452]/80 p-6">
+            <p className="text-4xl font-light">x402 + DBC</p>
+            <p className="mt-2 font-semibold">Prepaid capacity for API calls</p>
+            <p className="mt-3 text-sm text-white/85">
+              Kuota tokenises calls on Meteora DBC and settles them through x402. No custom
+              on-chain program, no keys held.
+            </p>
+          </div>
+          {FACTS.map((f) => (
+            <div key={f.value} className="px-2 lg:px-4">
+              <p className="whitespace-nowrap text-4xl font-light xl:text-5xl">{f.value}</p>
+              <p className="mt-3 text-sm text-white/90">{f.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section className={`${sectionX} mt-24 grid grid-cols-1 gap-12 lg:grid-cols-12`}>
+        <div className="lg:col-span-5">
+          <h2 className="text-5xl font-light">What kuota does</h2>
+          <p className="mt-5 max-w-md text-mute">
+            One token, three jobs: it funds providers early, lowers what agents pay per call, and
+            leaves a public record of every call served.
+          </p>
+        </div>
+        <ul className="lg:col-span-7">
+          {capabilities.map((c) => (
+            <li key={c.title} className="grid grid-cols-[3.5rem_1fr] gap-6 border-b border-line py-8 first:pt-0">
+              <div className="pt-1">{c.icon}</div>
+              <div className="border-l border-line pl-6">
+                <h3 className="text-2xl font-normal">{c.title}</h3>
+                <p className="mt-3 text-mute">{c.body}</p>
+                <Link
+                  href={c.href}
+                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
+                >
+                  {c.link}
+                  <ArrowRight />
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Payment and agent client */}
+      <section id="agents" className={`${sectionX} mt-24 scroll-mt-8`}>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <h2 className="text-5xl font-light">
+              One endpoint, <span className="text-accent">two ways to pay</span>
+            </h2>
+            <p className="mt-5 text-mute">
+              The provider&apos;s API answers 402 with two prices: the USDC price, or one kuota.
+              Agents swap <code className="font-semibold text-ink">fetch</code> for{" "}
+              <code className="font-semibold text-ink">kuotaFetch</code>, which follows one rule in
+              this order:
+            </p>
+            <ol className="mt-6 space-y-4">
+              {[
+                ["Pay with kuota", "when you hold at least 1 and it costs no more than the USDC price."],
+                ["Buy a batch, then pay with kuota", "when you hold none, a batch of 100 is cheaper even after slippage, and it fits your hourly budget."],
+                ["Pay with USDC", "in every other case."],
+              ].map(([term, value], i) => (
+                <li key={term} className="flex gap-4">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-wash text-sm font-semibold text-accent">
+                    {i + 1}
+                  </span>
+                  <p>
+                    <span className="font-semibold">{term}</span>{" "}
+                    <span className="text-mute">{value}</span>
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-sm text-mute">
+              Design preview. The middleware and the client are not released yet; field names
+              follow x402 V2 and are checked against the SDK before release.
+            </p>
+          </div>
+          <div className="min-w-0 space-y-4 lg:col-span-7">
+            <CodeBlock label="Example 402 response body" code={RESPONSE_402} />
+            <CodeBlock label="kuotaFetch example" code={AGENT_SNIPPET} />
           </div>
         </div>
       </section>
 
-      {/* Payment: narrow explanation left, wide literal 402 response right. */}
-      <section className="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-12">
-        <div className="lg:col-span-4">
-          <h2 className="text-4xl font-extrabold">One endpoint, two ways to pay.</h2>
-          <p className="mt-4">
-            A provider&apos;s API answers with 402 and lists two prices: the USDC price, or one
-            kuota. The agent client picks the cheaper option on every call and never pays more than
-            the USDC one.
-          </p>
-          <p className="mt-4 text-sm text-mute">
-            Design preview. The middleware and the client are not released yet. Field names follow
-            x402 V2 and are checked against the installed SDK before release.
-          </p>
-        </div>
-        <div className="min-w-0 lg:col-span-8">
-          <CodeBlock label="Example 402 response body" code={RESPONSE_402} />
-          <dl className="mt-4 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
-            <div>
-              <dt className="font-bold">amount 10000</dt>
-              <dd className="text-mute">0.01 USDC, because USDC has 6 decimals.</dd>
-            </div>
-            <div>
-              <dt className="font-bold">amount 1000000</dt>
-              <dd className="text-mute">1 kuota, which is exactly one call.</dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      {/* Agents: wide snippet left, the decision rule right (mirror of the section above). */}
-      <section className="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-12">
-        <div className="min-w-0 lg:col-span-7">
-          <CodeBlock label="kuotaFetch example" code={AGENT_SNIPPET} />
-        </div>
-        <div className="order-first lg:order-none lg:col-span-5">
-          <h2 className="text-4xl font-extrabold">For agents, swap fetch for kuotaFetch.</h2>
-          <p className="mt-4">
-            On every 402 the client compares the two prices and follows one rule, in this order:
-          </p>
-          <dl className="mt-4 border-t-[1.5px] border-ink text-sm">
-            {[
-              ["Pay with kuota", "when you hold at least 1 and it costs no more than the USDC price."],
-              ["Buy a batch, then pay with kuota", "when you hold none, a batch of 100 is cheaper even after slippage, and it fits your hourly budget."],
-              ["Pay with USDC", "in every other case."],
-            ].map(([term, value]) => (
-              <div key={term} className="border-b border-rule py-3">
-                <dt className="font-bold">{term}</dt>
-                <dd className="text-mute">{value}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-4 text-sm text-mute">
-            Not released yet. The package name and options follow the project docs.
-          </p>
-        </div>
-      </section>
-
-      {/* Price path: full-bleed teal band, chart on a card so its text keeps contrast. */}
-      <section className="mt-24 bg-teal text-paper">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:items-center">
+      {/* Price path */}
+      <section className={`${sectionX} mt-24`}>
+        <div className="grid grid-cols-1 gap-10 rounded-panel bg-card p-6 sm:p-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
-            <h2 className="text-4xl font-extrabold sm:text-5xl">
-              The curve starts at half price and stops at 85%.
+            <h2 className="text-4xl font-light sm:text-5xl">
+              Starts at half price, <span className="text-teal">stops at 85%</span>
             </h2>
-            <dl className="mt-8 space-y-4">
-              <div className="border-t border-paper/40 pt-3">
-                <dt className="font-bold">Fixed supply</dt>
-                <dd>Equal to the calls the provider commits to serve. No new tokens, ever.</dd>
-              </div>
-              <div className="border-t border-paper/40 pt-3">
-                <dt className="font-bold">Always below redemption</dt>
-                <dd>
-                  The last price on the curve is 15% under the USDC price of a call, so the curve
-                  cannot price a kuota above what it redeems for.
-                </dd>
-              </div>
-              <div className="border-t border-paper/40 pt-3">
-                <dt className="font-bold">After graduation</dt>
-                <dd>
-                  The pool moves to DAMM v2. If kuota ever costs more than USDC, agents simply pay
-                  USDC.
-                </dd>
-              </div>
+            <dl className="mt-8 space-y-5">
+              {[
+                ["Fixed supply", "Equal to the calls the provider commits to serve. No new tokens, ever."],
+                ["Always below redemption", "The last price on the curve is 15% under the USDC price of a call."],
+                ["After graduation", "The pool moves to DAMM v2. If kuota ever costs more than USDC, agents simply pay USDC."],
+              ].map(([t, d]) => (
+                <div key={t} className="border-t border-line pt-4">
+                  <dt className="font-semibold">{t}</dt>
+                  <dd className="mt-1 text-mute">{d}</dd>
+                </div>
+              ))}
             </dl>
           </div>
-          <div className="rounded-panel border-[1.5px] border-ink bg-card p-5 text-ink lg:col-span-7">
+          <div className="min-w-0 rounded-[18px] bg-paper p-5 lg:col-span-7">
             <CurveChart
               title="Price per call on the curve, for a 0.01 USDC call and a 750 USDC threshold (estimate)"
               points={simulation.curve}
@@ -185,72 +310,63 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Burn ledger: stamps on the left, the accounting identity on the right. */}
-      <section className="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12">
+      {/* Ledger */}
+      <section className={`${sectionX} mt-24 grid grid-cols-1 gap-10 lg:grid-cols-12`}>
         <div className="lg:col-span-7">
-          <h2 className="text-4xl font-extrabold">Spent kuota is burned, in public.</h2>
-          <p className="mt-4 max-w-prose">
+          <h2 className="text-5xl font-light">Spent kuota is burned, in public</h2>
+          <p className="mt-5 max-w-prose text-mute">
             The provider&apos;s balance is burned every 10 minutes through an SPL delegate, so
-            burned supply always equals calls served. Every burn gets a row in the ledger.
+            burned supply always equals calls served.
           </p>
-          <ul className="mt-6 divide-y divide-rule border-y-[1.5px] border-ink">
+          <ul className="mt-6 border-t border-line">
             {burns.map((b) => (
-              <li key={b.id} className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[1fr_auto_auto]">
-                <span className="font-display text-2xl font-bold">
-                  {wholeUnits(b.amount)} kuota
+              <li key={b.id} className="flex items-center justify-between gap-4 border-b border-line py-4">
+                <span className="text-2xl font-light">{wholeUnits(b.amount)} kuota</span>
+                <span className="flex items-center gap-3">
+                  <span className="hidden text-sm text-mute sm:inline">sample, no transaction</span>
+                  <span className={`${chip} border-teal/40 bg-teal-wash text-teal`}>Burned</span>
                 </span>
-                <span className="stamp justify-self-end sm:order-last">Redeemed</span>
-                <span className="text-sm text-mute">sample, no transaction</span>
               </li>
             ))}
           </ul>
         </div>
-        <aside className="lg:col-span-5 lg:pt-16">
-          <p className="text-sm font-semibold text-mute">The accounting identity</p>
-          <p className="mt-2 rounded-panel border-[1.5px] border-ink bg-card p-5 font-display text-2xl font-bold leading-snug">
-            circulating = supply - burned - balance in curve or pool
+        <aside className="lg:col-span-5 lg:pt-20">
+          <p className="text-sm text-mute">The accounting identity</p>
+          <p className="mt-2 rounded-panel bg-card p-6 text-2xl font-light leading-snug">
+            circulating = supply &minus; burned &minus; balance in curve or pool
           </p>
           <p className="mt-3 text-sm text-mute">
-            This is the rule the ledger has to satisfy at every snapshot, so anyone can re-check
-            the numbers with a query.
+            The rule the ledger has to satisfy at every snapshot, so anyone can re-check the
+            numbers with a query.
           </p>
         </aside>
       </section>
 
-      {/* Providers: terms at launch, as a plain ruled list. */}
-      <section className="mx-auto mt-24 grid max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <h2 className="text-4xl font-extrabold">
-            Launching takes one form and two signatures.
+      {/* Closing band */}
+      <section className={`${sectionX} mt-24`}>
+        <div className="brand-band grid grid-cols-1 gap-10 rounded-panel p-8 sm:p-12 lg:grid-cols-2">
+          <h2 className="text-4xl font-light sm:text-5xl">
+            No idle credits.
+            <br />
+            No retail prices.
           </h2>
-          <p className="mt-4 max-w-prose">
-            You sign <code>createConfig</code> and <code>createPoolWithFirstBuy</code> in your own
-            wallet. Kuota builds the transactions and never holds your keys. Your endpoint then
-            adds one entry to <code>accepts</code>.
-          </p>
-          <Link href="/launch" className={`${primaryCta} mt-8`}>
-            Launch a kuota for your API
-          </Link>
-        </div>
-        <div className="lg:col-span-7">
-          <p className="text-sm font-semibold text-mute">Terms at launch</p>
-          <dl className="mt-2 border-t-[1.5px] border-ink">
-            {[
-              ["Creator share of trading fees", "50% from the first minute"],
-              ["Migration fee at graduation", "30%, paid to the provider"],
-              ["Liquidity after graduation", "Locked permanently, fees still claimable"],
-              ["Leftover tokens", "Return to the provider wallet"],
-              ["Kuota’s cut", "Kuota is the DBC partner and earns a share of trading fees"],
-            ].map(([term, value]) => (
-              <div
-                key={term}
-                className="grid gap-1 border-b border-rule py-3 sm:grid-cols-5 sm:gap-4"
-              >
-                <dt className="font-bold sm:col-span-2">{term}</dt>
-                <dd className="sm:col-span-3">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <div>
+            <p className="text-2xl font-light">Launch in one form, two signatures</p>
+            <p className="mt-3 text-white/90">
+              Set a price and a supply, then sign <code>createConfig</code> and{" "}
+              <code>createPoolWithFirstBuy</code> in your own wallet. Creator share of trading
+              fees is 50%, the migration fee goes to you, and liquidity is locked permanently
+              after graduation.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/launch" className={btnOnBrand}>
+                Launch a kuota for your API
+              </Link>
+              <Link href="/providers" className={btnOnBrandOutline}>
+                See providers
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

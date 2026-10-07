@@ -15,7 +15,7 @@ export default async function ProvidersPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-4 pt-12 sm:px-6">
-      <h1 className="text-5xl font-extrabold">Providers</h1>
+      <h1 className="text-5xl font-light">Providers</h1>
       <p className="mt-3 max-w-prose text-lg">
         Every kuota that is live, with the API it pays for and where its curve stands.
       </p>
@@ -34,15 +34,15 @@ export default async function ProvidersPage() {
             action={{ href: "/launch", label: "Launch a kuota for your API" }}
           />
         ) : (
-          <ul className="border-t-[1.5px] border-ink">
+          <ul className="border-t border-line">
             {providers.map((p) => (
-              <li key={p.mint} className="border-b border-rule">
+              <li key={p.mint} className="border-b border-line">
                 <Link
                   href={`/k/${p.mint}`}
                   className="grid gap-x-6 gap-y-2 py-5 hover:bg-card sm:grid-cols-12 sm:items-center sm:px-3"
                 >
                   <span className="sm:col-span-5">
-                    <span className="block font-display text-2xl font-bold">{p.name}</span>
+                    <span className="block text-2xl font-light">{p.name}</span>
                     <span className="block text-sm text-mute">
                       {p.symbol} on {hostOf(p.endpointUrl)}
                       {p.isSample ? " (sample)" : ` (${shortKey(p.mint)})`}
@@ -64,7 +64,7 @@ export default async function ProvidersPage() {
                         : `${Math.round(p.curveProgressBps / 100)}% filled`}
                     </span>
                   </span>
-                  <span className="font-bold underline underline-offset-4 sm:col-span-2 sm:text-right">
+                  <span className="font-semibold underline underline-offset-4 sm:col-span-2 sm:text-right">
                     Open token page
                   </span>
                 </Link>

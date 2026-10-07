@@ -1,54 +1,54 @@
-# Kuota UI direction
+# Kuota UI direction (v2)
 
-Source: direction chosen by the project owner on 2026-10-06 ("warm, internet-kuota voucher"). The agent transcribed it into tokens. Applied under `antislop` (core + `antislop-ui`) and `ui-ux-pro-max`.
+Source: on 2026-10-07 the project owner replaced the v1 "printed voucher" direction with a visual reference: a clean white SaaS landing page with electric blue, large light-weight headlines with one coloured phrase, pill buttons, a glossy 3D object in the hero, a blue gradient stats band, and an icon list of capabilities. The agent transcribed that reference into tokens. Applied under `antislop` (core + `antislop-ui`) and `ui-ux-pro-max`.
 
-Design Read: Web app for x402 API providers and agent operators, in a printed-voucher style, dial ENERGY 2 / RHYTHM 3 / MOTION 1.
+Design Read: Product landing and web app for x402 API providers and agent operators, in a bright Swiss-SaaS style with an electric blue brand, dial ENERGY 2 / RHYTHM 3 / MOTION 1.
 
 Dial: ENERGY 2 / RHYTHM 3 / MOTION 1
 
-## Product facts the UI must respect
+## What the reference changes, and what the filter keeps
 
-- 1 kuota = 1 API call. Supply is fixed to committed calls.
-- Curve stays below the USDC per-call price (50% to 85%). Never imply price growth. Kuota is a service credit, not an investment (REQUIREMENTS: Non-Goals).
-- Every number on screen is real or labelled sample data (R-17, R-38). No backend yet, so pages run on a mock layer and say so.
+| Reference element | Used as | Reason |
+| --- | --- | --- |
+| Electric blue + gradient band | Brand colour, one gradient band per page at most | Owner's chosen identity (R-01 allows brand gradients) |
+| Light, very large headlines with one coloured phrase | Hero and section titles | The reference's main voice |
+| Pill buttons with an arrow circle | Primary CTA only gets the arrow | The arrow marks "go somewhere"; secondary buttons stay plain (R-08) |
+| Glossy 3D loop | Inline SVG loop | Reads as the kuota lifecycle: buy, spend, burn. No stock 3D asset |
+| Big traction stats (6.5M+, 150k+) | Protocol facts (1:1, 50 to 85%, 10 min) | No real traction yet, so no invented numbers (R-17, R-36) |
+| "Backed by" logo row | "Built on" row of the real stack, in text | Kuota has no backers to show; the stack is real (R-18, R-38) |
+| Capabilities list | Three real jobs: providers, agents, the public ledger | Each links to a page that exists (R-24) |
 
-## Identity motif
+## Palette (R-29: 2 core + neutrals, 1 accent)
 
-A printed voucher. Ticket shape with a perforation line, a mint serial on the stub, and a rubber stamp reading "Redeemed" on every burned row. Reason: a kuota token is a voucher for one call, and burning is redemption. The motif carries meaning on each screen instead of decorating it.
+| Token | Light | Dark | Role |
+| --- | --- | --- | --- |
+| paper | `#FFFFFF` | `#070B24` | page ground |
+| card | `#F4F6FF` | `#10163A` | panels, code, inputs ground |
+| ink | `#0E1330` | `#F3F5FF` | text (18.2:1, 17.9:1) |
+| mute | `#585E7A` | `#A3AACB` | secondary text (6.4:1, 8.5:1) |
+| line | `#E3E6F2` | `#232A55` | hairlines between rows (decorative) |
+| line-strong | `#7E85A6` | `#6E78A0` | input and control borders (3.6:1, 4.5:1) |
+| accent (blue) | `#2340FF` | `#7A8CFF` | brand, buttons, links, focus (6.5:1 both) |
+| accent-deep | `#0B1FB8` | `#2340FF` | gradient end, pressed state |
+| teal (green) | `#0A7A3C` | `#3DDC84` | discount, "kept value", success |
 
-## Palette (2 core + neutral base, 1 accent, R-29)
-
-| Token | Light | Dark | Role | Reason |
-| --- | --- | --- | --- | --- |
-| paper | `#F4EDDD` | `#17150F` | page ground | warm cardstock, reads as printed matter |
-| card | `#FBF7EC` | `#211E17` | voucher and panels | one step above paper, no shadow needed |
-| ink | `#1C1A15` | `#F2EBDA` | text, borders | 14.9:1 on paper (light), 15.4:1 (dark) |
-| mute | `#5C5648` | `#B3AA96` | secondary text | 6.3:1 on paper (light), 7.9:1 (dark) |
-| teal | `#0D5A4B` | `#6FC9AF` | core 2: redeemed, discount held, graduated | green = value kept; 7.0:1 on paper |
-| accent | `#C93C12` | `#FF7A4D` | the one moment: buy and launch actions, discount figure | white on accent 5.1:1 (light) |
-
-Theme: light default. Dark toggle ships and both are verified (R-21, R-34). Reason for light default: the product is a consumer-facing credit, not a terminal.
+The blue is the one deliberate accent; green is reserved for money you save.
 
 ## Typography
 
-- Display: Bricolage Grotesque. Reason: a little ink-trap character reads as print, not as the AI default roster.
-- Body and data: Public Sans, tabular numerals on every figure. Reason: neutral and legible for prices and ledgers.
-- No monospace as aesthetic (R-06). Code samples use the system monospace stack because they are literal code.
+Hanken Grotesk for everything. Reason: a neutral neo-grotesk with real light weights, which the reference's thin, large headlines need, and it is not one of the default AI fonts. Headlines use weight 300 to 400 at large sizes; labels and numbers use 500 to 600. Tabular numerals on every figure.
 
-## Shape, depth, effects
+## Shape and depth
 
-- Radius: 6px on panels and inputs, 4px on controls, ticket notches are circles. No pills.
-- Borders: 1.5px ink lines carry structure. Zero blur, zero glow, zero gradient. Elevation: none, except the sticky buy panel which gets a hard offset edge (R-12 reason: it floats over the ledger while scrolling).
-- Icons: three hand-drawn SVGs (theme, wallet, copy). No icon library.
+- Radius: pills (`9999px`) for buttons and chips, 24px for cards and bands, 12px for inputs and code blocks.
+- Borders: hairline `line` on cards. No heavy ink borders.
+- Shadow: one soft elevation for the sticky buy panel only (R-12).
+- Gradient: the stats band and the closing band. Nothing else (R-01).
 
 ## Motion (dial 1)
 
-Hover, press and focus states only, plus one purposeful fill: the curve progress bar animates once on mount to show how far the curve has moved. All motion is disabled under `prefers-reduced-motion`.
+Hover, press and focus states, plus the one-time curve progress fill. Everything respects `prefers-reduced-motion`.
 
-## Copy rules
+## Copy
 
-English UI. Sentence case. No em dash, no emoji, no buzzwords. CTAs name the action ("Launch a kuota", "Browse live kuota").
-
-## Layout rhythm
-
-Home alternates: asymmetric hero with the voucher, wide code panel plus narrow note, full-bleed teal band for the price path, ledger left with stamp column, and a plain footer. Each page is built from its own content, not a shared section template.
+English, sentence case, no em dash, no emoji, no buzzwords. CTAs name the action.
