@@ -18,6 +18,7 @@ import {
   jupiterSwap,
   wholeUnits,
 } from "@/lib/format";
+import { reveal } from "@/lib/ui";
 
 export async function generateMetadata({ params }: PageProps<"/k/[mint]">): Promise<Metadata> {
   const { mint } = await params;
@@ -61,7 +62,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
 
   return (
     <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-10 gap-y-12 px-4 pb-4 pt-10 sm:px-6 lg:grid-cols-12">
-      <div className="space-y-3 lg:col-span-8">
+      <div {...reveal(0)} className="space-y-3 lg:col-span-8">
         {kuota.isSample && <SampleNotice what="Figures follow the worked example in the docs." />}
         <Voucher data={kuota} />
 
@@ -85,7 +86,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
         </div>
       </div>
 
-      <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1">
+      <aside {...reveal(150)} className="lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1">
         <div className="lg:sticky lg:top-6">
           <BuyPanel
             symbol={kuota.symbol}
@@ -98,7 +99,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
       </aside>
 
       <div className="min-w-0 space-y-16 lg:col-span-8">
-        <section aria-labelledby="specs">
+        <section {...reveal(0)} aria-labelledby="specs">
           <h2 id="specs" className="text-3xl font-light">
             The numbers
           </h2>
@@ -113,7 +114,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
         </section>
 
         {graduated ? (
-          <section aria-labelledby="market">
+          <section {...reveal(0)} aria-labelledby="market">
             <h2 id="market" className="text-3xl font-light">
               Trading on DAMM v2
             </h2>
@@ -139,7 +140,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
             </div>
           </section>
         ) : (
-          <section aria-labelledby="curve">
+          <section {...reveal(0)} aria-labelledby="curve">
             <h2 id="curve" className="mb-4 text-3xl font-light">
               Where the curve stands
             </h2>
@@ -152,7 +153,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </section>
         )}
 
-        <section aria-labelledby="burns">
+        <section {...reveal(0)} aria-labelledby="burns">
           <h2 id="burns" className="text-3xl font-light">
             Burn ledger
           </h2>
@@ -165,7 +166,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </div>
         </section>
 
-        <section aria-labelledby="settlements">
+        <section {...reveal(0)} aria-labelledby="settlements">
           <h2 id="settlements" className="text-3xl font-light">
             Recent payments
           </h2>
@@ -177,7 +178,7 @@ export default async function KuotaPage({ params }: PageProps<"/k/[mint]">) {
           </p>
         </section>
 
-        <details className="group rounded-panel border border-line bg-paper">
+        <details {...reveal(0)} className="group rounded-panel border border-line bg-paper">
           <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 px-5 py-3 text-xl font-light">
             Running this endpoint? Set it up to accept kuota
             <span aria-hidden="true" className="text-2xl leading-none group-open:rotate-45">+</span>

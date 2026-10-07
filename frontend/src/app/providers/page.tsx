@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EmptyState, SampleNotice } from "@/components/states";
 import { listProviders } from "@/lib/api";
 import { formatPercentFromBps, formatUsdc, hostOf, shortKey } from "@/lib/format";
+import { reveal } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Providers",
@@ -15,8 +16,8 @@ export default async function ProvidersPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-4 pt-12 sm:px-6">
-      <h1 className="text-5xl font-light">Providers</h1>
-      <p className="mt-3 max-w-prose text-lg">
+      <h1 {...reveal(0)} className="text-5xl font-light">Providers</h1>
+      <p {...reveal(100)} className="mt-3 max-w-prose text-lg">
         Every kuota that is live, with the API it pays for and where its curve stands.
       </p>
 
@@ -35,8 +36,8 @@ export default async function ProvidersPage() {
           />
         ) : (
           <ul className="border-t border-line">
-            {providers.map((p) => (
-              <li key={p.mint} className="border-b border-line">
+            {providers.map((p, i) => (
+              <li key={p.mint} {...reveal(150 + i * 80)} className="border-b border-line">
                 <Link
                   href={`/k/${p.mint}`}
                   className="grid gap-x-6 gap-y-2 py-5 hover:bg-card sm:grid-cols-12 sm:items-center sm:px-3"

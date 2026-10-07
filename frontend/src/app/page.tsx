@@ -7,7 +7,7 @@ import { usingSampleData } from "@/lib/api";
 import { estimateCurve } from "@/lib/curve";
 import { wholeUnits } from "@/lib/format";
 import { mockGetBurns, mockGetKuota, SAMPLE_MINT } from "@/lib/mock-data";
-import { btnOnBrand, btnOnBrandOutline, btnPrimary, btnSecondary, chip, sectionX } from "@/lib/ui";
+import { btnOnBrand, btnOnBrandOutline, btnPrimary, btnSecondary, chip, reveal, sectionX } from "@/lib/ui";
 
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
@@ -121,13 +121,13 @@ export default function HomePage() {
       {/* Hero */}
       <section className={`${sectionX} pt-14 sm:pt-20`}>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-          <h1 className="text-5xl font-light sm:text-6xl lg:col-span-7 lg:text-7xl">
+          <h1 {...reveal(0)} className="text-5xl font-light sm:text-6xl lg:col-span-7 lg:text-7xl">
             Turn API capacity into{" "}
             <span className="bg-gradient-to-r from-accent to-teal bg-clip-text text-transparent">
               prepaid calls
             </span>
           </h1>
-          <div className="lg:col-span-5 lg:pt-3">
+          <div {...reveal(150)} className="lg:col-span-5 lg:pt-3">
             <p className="flex flex-wrap items-center gap-2 text-sm">
               <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-ink">New</span>
               <span className="text-mute">Built for x402 APIs on Solana</span>
@@ -149,7 +149,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="relative mt-8 md:mt-4">
+        <div {...reveal(250, "scale")} className="relative mt-8 md:mt-4">
           <div className="mx-auto max-w-3xl">
             <HeroLoop />
           </div>
@@ -159,7 +159,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-6 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+        <div {...reveal(0)} className="mt-10 flex flex-col gap-6 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs text-mute">Built on</p>
             <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
@@ -181,7 +181,7 @@ export default function HomePage() {
 
       {/* Facts band */}
       <section className={`${sectionX} mt-16`} aria-label="How kuota is set up">
-        <div className="brand-band grid grid-cols-1 gap-8 rounded-panel p-4 sm:p-6 lg:grid-cols-4 lg:items-center">
+        <div {...reveal(0)} className="brand-band grid grid-cols-1 gap-8 rounded-panel p-4 sm:p-6 lg:grid-cols-4 lg:items-center">
           <svg
             viewBox="0 0 1200 300"
             preserveAspectRatio="none"
@@ -199,8 +199,8 @@ export default function HomePage() {
               on-chain program, no keys held.
             </p>
           </div>
-          {FACTS.map((f) => (
-            <div key={f.value} className="px-2 lg:px-4">
+          {FACTS.map((f, i) => (
+            <div key={f.value} {...reveal(150 + i * 120)} className="px-2 lg:px-4">
               <p className="whitespace-nowrap text-4xl font-light xl:text-5xl">{f.value}</p>
               <p className="mt-3 text-sm text-white/90">{f.label}</p>
             </div>
@@ -210,7 +210,7 @@ export default function HomePage() {
 
       {/* Capabilities */}
       <section className={`${sectionX} mt-24 grid grid-cols-1 gap-12 lg:grid-cols-12`}>
-        <div className="lg:col-span-5">
+        <div {...reveal(0)} className="lg:col-span-5">
           <h2 className="text-5xl font-light">What kuota does</h2>
           <p className="mt-5 max-w-md text-mute">
             One token, three jobs: it funds providers early, lowers what agents pay per call, and
@@ -218,8 +218,8 @@ export default function HomePage() {
           </p>
         </div>
         <ul className="lg:col-span-7">
-          {capabilities.map((c) => (
-            <li key={c.title} className="grid grid-cols-[3.5rem_1fr] gap-6 border-b border-line py-8 first:pt-0">
+          {capabilities.map((c, i) => (
+            <li key={c.title} {...reveal(i * 120)} className="grid grid-cols-[3.5rem_1fr] gap-6 border-b border-line py-8 first:pt-0">
               <div className="pt-1">{c.icon}</div>
               <div className="border-l border-line pl-6">
                 <h3 className="text-2xl font-normal">{c.title}</h3>
@@ -240,7 +240,7 @@ export default function HomePage() {
       {/* Payment and agent client */}
       <section id="agents" className={`${sectionX} mt-24 scroll-mt-8`}>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+          <div {...reveal(0)} className="lg:col-span-5">
             <h2 className="text-5xl font-light">
               One endpoint, <span className="text-accent">two ways to pay</span>
             </h2>
@@ -272,7 +272,7 @@ export default function HomePage() {
               follow x402 V2 and are checked against the SDK before release.
             </p>
           </div>
-          <div className="min-w-0 space-y-4 lg:col-span-7">
+          <div {...reveal(150)} className="min-w-0 space-y-4 lg:col-span-7">
             <CodeBlock label="Example 402 response body" code={RESPONSE_402} />
             <CodeBlock label="kuotaFetch example" code={AGENT_SNIPPET} />
           </div>
@@ -281,7 +281,7 @@ export default function HomePage() {
 
       {/* Price path */}
       <section className={`${sectionX} mt-24`}>
-        <div className="grid grid-cols-1 gap-10 rounded-panel bg-card p-6 sm:p-10 lg:grid-cols-12 lg:items-center">
+        <div {...reveal(0)} className="grid grid-cols-1 gap-10 rounded-panel bg-card p-6 sm:p-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
             <h2 className="text-4xl font-light sm:text-5xl">
               Starts at half price, <span className="text-teal">stops at 85%</span>
@@ -312,7 +312,7 @@ export default function HomePage() {
 
       {/* Ledger */}
       <section className={`${sectionX} mt-24 grid grid-cols-1 gap-10 lg:grid-cols-12`}>
-        <div className="lg:col-span-7">
+        <div {...reveal(0)} className="lg:col-span-7">
           <h2 className="text-5xl font-light">Spent kuota is burned, in public</h2>
           <p className="mt-5 max-w-prose text-mute">
             The provider&apos;s balance is burned every 10 minutes through an SPL delegate, so
@@ -330,7 +330,7 @@ export default function HomePage() {
             ))}
           </ul>
         </div>
-        <aside className="lg:col-span-5 lg:pt-20">
+        <aside {...reveal(150)} className="lg:col-span-5 lg:pt-20">
           <p className="text-sm text-mute">The accounting identity</p>
           <p className="mt-2 rounded-panel bg-card p-6 text-2xl font-light leading-snug">
             circulating = supply &minus; burned &minus; balance in curve or pool
@@ -344,7 +344,7 @@ export default function HomePage() {
 
       {/* Closing band */}
       <section className={`${sectionX} mt-24`}>
-        <div className="brand-band grid grid-cols-1 gap-10 rounded-panel p-8 sm:p-12 lg:grid-cols-2">
+        <div {...reveal(0, "scale")} className="brand-band grid grid-cols-1 gap-10 rounded-panel p-8 sm:p-12 lg:grid-cols-2">
           <h2 className="text-4xl font-light sm:text-5xl">
             No idle credits.
             <br />

@@ -2,9 +2,9 @@
 
 Source: on 2026-10-07 the project owner replaced the v1 "printed voucher" direction with a visual reference: a clean white SaaS landing page with electric blue, large light-weight headlines with one coloured phrase, pill buttons, a glossy 3D object in the hero, a blue gradient stats band, and an icon list of capabilities. The agent transcribed that reference into tokens. Applied under `antislop` (core + `antislop-ui`) and `ui-ux-pro-max`.
 
-Design Read: Product landing and web app for x402 API providers and agent operators, in a bright Swiss-SaaS style with an electric blue brand, dial ENERGY 2 / RHYTHM 3 / MOTION 1.
+Design Read: Product landing and web app for x402 API providers and agent operators, in a bright Swiss-SaaS style with an electric blue brand, dial ENERGY 2 / RHYTHM 3 / MOTION 2.
 
-Dial: ENERGY 2 / RHYTHM 3 / MOTION 1
+Dial: ENERGY 2 / RHYTHM 3 / MOTION 2
 
 ## What the reference changes, and what the filter keeps
 
@@ -45,9 +45,13 @@ Hanken Grotesk for everything. Reason: a neutral neo-grotesk with real light wei
 - Shadow: one soft elevation for the sticky buy panel only (R-12).
 - Gradient: the stats band and the closing band. Nothing else (R-01).
 
-## Motion (dial 1)
+## Motion (dial 2, requested by the owner on 2026-10-07)
 
-Hover, press and focus states, plus the one-time curve progress fill. Everything respects `prefers-reduced-motion`.
+- Smooth scrolling with Lenis (wheel, keyboard and `#anchor` links). Purpose: anchor jumps glide instead of teleporting. Dialogs and code blocks keep native scrolling.
+- Scroll reveal: blocks fade and rise 28px once as they enter the viewport, with short staggers (120 to 150ms) between siblings. Purpose: leads the eye down the page one block at a time. Each element animates once, never loops.
+- Route change: the new page fades up over 450ms (`app/template.tsx`).
+- Hover, press and focus states, plus the one-time curve progress fill.
+- Under `prefers-reduced-motion` all of it is off: no Lenis, no reveal, no page fade. Without JavaScript nothing is hidden, because the reveal is armed by the head script.
 
 ## Copy
 

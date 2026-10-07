@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hanken_Grotesk } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Motion } from "@/components/motion";
 import { KuotaWalletProvider } from "@/components/wallet-provider";
 import "./globals.css";
 
@@ -22,8 +23,9 @@ export const metadata: Metadata = {
     "One kuota is one call on an x402 API. Buy early at a discount, spend it per call, and every spent kuota is burned.",
 };
 
-// Runs before paint so the saved or system theme applies without a flash.
-const themeScript = `try{var t=localStorage.getItem("kuota-theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}`;
+// Runs before paint: applies the saved or system theme, and arms scroll reveals when motion
+// is allowed, so neither causes a flash.
+const themeScript = `try{var t=localStorage.getItem("kuota-theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("reveal-ready")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -48,6 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <SiteFooter />
+          <Motion />
         </KuotaWalletProvider>
       </body>
     </html>

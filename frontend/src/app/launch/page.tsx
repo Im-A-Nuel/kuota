@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LaunchForm } from "@/components/launch-form";
 import { ProviderSetup } from "@/components/provider-setup";
+import { reveal } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Launch a kuota",
@@ -10,15 +11,15 @@ export const metadata: Metadata = {
 export default function LaunchPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-4 pt-12 sm:px-6">
-      <h1 className="text-5xl font-light">Launch a kuota for your API.</h1>
-      <p className="mt-3 max-w-prose text-lg">
+      <h1 {...reveal(0)} className="text-5xl font-light">Launch a kuota for your API.</h1>
+      <p {...reveal(100)} className="mt-3 max-w-prose text-lg">
         Set a price and a supply, preview the curve, then sign two transactions in your own wallet.
         Kuota never holds your keys.
       </p>
       <div className="mt-12">
         <LaunchForm />
       </div>
-      <section className="mt-24 max-w-3xl">
+      <section {...reveal(0)} className="mt-24 max-w-3xl">
         <ProviderSetup />
       </section>
     </div>

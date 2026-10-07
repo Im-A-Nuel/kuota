@@ -9,7 +9,7 @@ import { ApiError, type BuildLaunchResult } from "@/lib/types";
 import { CurveChart } from "./curve-chart";
 import { ErrorNote, ErrorState } from "./states";
 import { Voucher } from "./voucher";
-import { input } from "@/lib/ui";
+import { input, reveal } from "@/lib/ui";
 import { useWalletDialog } from "./wallet-provider";
 
 
@@ -201,7 +201,7 @@ export function LaunchForm() {
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-      <div className="space-y-10 lg:col-span-6">
+      <div {...reveal(150)} className="space-y-10 lg:col-span-6">
         <fieldset className="space-y-5">
           <legend className="text-3xl font-light">Pricing and supply</legend>
           <Field label="Price of one call in USDC" hint="What a caller pays today with USDC." error={show("usdcPricePerCall")}>
@@ -238,7 +238,7 @@ export function LaunchForm() {
         </fieldset>
       </div>
 
-      <div className="lg:col-span-6">
+      <div {...reveal(250)} className="lg:col-span-6">
         <div className="space-y-6 lg:sticky lg:top-6">
           {paramsValid ? (
             <>

@@ -15,3 +15,14 @@ export const chip =
 export const input =
   "mt-1.5 min-h-12 w-full rounded-control border border-line-strong bg-paper px-4 text-base text-ink placeholder:text-mute aria-[invalid=true]:border-2 aria-[invalid=true]:border-ink";
 export const sectionX = "mx-auto max-w-6xl px-4 sm:px-6";
+
+/**
+ * Props that make an element fade and rise into view when it scrolls in (see Motion).
+ * `delay` staggers siblings; `variant: "scale"` grows instead of rising.
+ */
+export function reveal(delay = 0, variant?: "scale") {
+  return {
+    "data-reveal": variant ?? "",
+    style: { "--reveal-delay": `${delay}ms` } as React.CSSProperties,
+  };
+}
