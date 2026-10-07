@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "@/components/icons";
 import { EmptyState, SampleNotice } from "@/components/states";
 import { listProviders } from "@/lib/api";
 import { formatPercentFromBps, formatUsdc, hostOf, shortKey } from "@/lib/format";
@@ -40,7 +41,7 @@ export default async function ProvidersPage() {
               <li key={p.mint} {...reveal(150 + i * 80)} className="border-b border-line">
                 <Link
                   href={`/k/${p.mint}`}
-                  className="grid gap-x-6 gap-y-2 py-5 hover:bg-card sm:grid-cols-12 sm:items-center sm:px-3"
+                  className="grid gap-x-6 gap-y-3 rounded-[18px] py-6 transition-colors hover:bg-card sm:grid-cols-12 sm:items-center sm:px-4"
                 >
                   <span className="sm:col-span-5">
                     <span className="block text-2xl font-light">{p.name}</span>
@@ -54,7 +55,7 @@ export default async function ProvidersPage() {
                       Against {formatUsdc(p.usdcPrice)} USDC per call
                     </span>
                     <span className="block font-semibold">
-                      {formatPercentFromBps(p.discountBps)} cheaper
+                      <span className="text-teal">{formatPercentFromBps(p.discountBps)} cheaper</span>
                     </span>
                   </span>
                   <span className="sm:col-span-2">
@@ -64,9 +65,16 @@ export default async function ProvidersPage() {
                         ? "Graduated"
                         : `${Math.round(p.curveProgressBps / 100)}% filled`}
                     </span>
+                    <span aria-hidden="true" className="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-card">
+                      <span
+                        className="block h-full rounded-full bg-accent"
+                        style={{ width: `${p.status === "graduated" ? 100 : p.curveProgressBps / 100}%` }}
+                      />
+                    </span>
                   </span>
-                  <span className="font-semibold underline underline-offset-4 sm:col-span-2 sm:text-right">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent sm:col-span-2 sm:justify-end">
                     Open token page
+                    <ArrowRight />
                   </span>
                 </Link>
               </li>
