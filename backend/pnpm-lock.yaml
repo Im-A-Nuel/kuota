@@ -17,6 +17,9 @@ importers:
       '@kuota/core':
         specifier: link:..\packages\core
         version: link:../packages/core
+      '@kuota/x402':
+        specifier: link:..\packages\x402-kuota
+        version: link:../packages/x402-kuota
       '@meteora-ag/dynamic-bonding-curve-sdk':
         specifier: ^1.5.13
         version: 1.5.13(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@7.0.2)(utf-8-validate@6.0.6)
@@ -53,6 +56,9 @@ importers:
       hono:
         specifier: ^4.13.13
         version: 4.13.13
+      kuota-fetch:
+        specifier: link:..\packages\kuota-fetch
+        version: link:../packages/kuota-fetch
       postgres:
         specifier: ^3.4.9
         version: 3.4.9

@@ -15,6 +15,7 @@
     "@electric-sql/pglite": "^0.5.8",
     "@hono/node-server": "^2.1.3",
     "@kuota/core": "link:..\\packages\\core",
+    "@kuota/x402": "link:..\\packages\\x402-kuota",
     "@meteora-ag/dynamic-bonding-curve-sdk": "^1.5.13",
     "@solana/kit": "^8.4.0",
     "@solana/spl-token": "^0.4.15",
@@ -27,6 +28,7 @@
     "drizzle-orm": "^0.45.3",
     "express": "^5.2.1",
     "hono": "^4.13.13",
+    "kuota-fetch": "link:..\\packages\\kuota-fetch",
     "postgres": "^3.4.9",
     "zod": "^4.6.5"
   },

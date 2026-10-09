@@ -32,3 +32,14 @@ Reproduce: from `backend/`, run `scripts/phase0/1-keys.ts`, fund the facilitator
 - **A missing provider token account.** The setup script creates it first, as `docs/SCHEMA.md` requires; the failure when it is absent was not exercised.
 - **Replaying a payment header.** Not exercised here; `ARCHITECTURE.md` plans to record settled signatures in `settlements`.
 - **Mainnet.** The whole project is on devnet by decision.
+
+## Follow-up: running the packages on devnet (2026-10-09)
+
+`backend/scripts/demo/agent.ts` runs the real packages end to end: our facilitator (`backend/src/facilitator.ts`), a demo provider on `@kuota/x402` (`backend/src/demo-api.ts`) and an agent on `kuota-fetch`. With 3 calls spaced 8 seconds apart, all 3 were served and settled on devnet, each paid with kuota from the agent's balance. At the stand-in market price of 0.0061 USDC the agent spent 0.0183 USDC-equivalent against a 0.0300 USDC baseline.
+
+**Risk found: paid but not served.** A first run with no spacing hit the public devnet RPC rate limit (HTTP 429, roughly 10 requests per method per 10 seconds). Two calls returned 402 although their transfers had already landed on-chain: the facilitator sent the transaction, then failed to confirm it, so the API refused to serve a call the agent had paid for. 2 kuota were lost that way.
+
+What to do about it:
+- Use a dedicated devnet RPC endpoint for the facilitator (`SOLANA_RPC` in `backend/.env`). This is required for the demo, not optional.
+- The demo agent now counts only served calls in its cost report and prints a warning when more kuota left the wallet than calls were served.
+- Not solved: the facilitator and middleware do not yet reconcile a transaction that was sent but not confirmed. That needs a retry on the signature before answering 402, and it is the first thing to fix before any real traffic.

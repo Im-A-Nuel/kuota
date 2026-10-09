@@ -5,6 +5,14 @@ import { fileURLToPath } from "node:url";
 
 // Phase 0 runs on devnet only. Keys live in backend/.keys, which is gitignored, and are
 // throwaway devnet keys: never put a key that ever held real funds in this file.
+// A local .env (gitignored) can set SOLANA_RPC to a dedicated devnet endpoint. The public one
+// rate limits hard enough to fail settlements (see docs/PHASE0.md).
+try {
+  process.loadEnvFile(fileURLToPath(new URL('../../.env', import.meta.url)));
+} catch {
+  // No .env file: use the defaults.
+}
+
 export const NETWORK = "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1" as const;
 export const RPC_URL = process.env.SOLANA_RPC ?? "https://api.devnet.solana.com";
 export const KEYS_FILE = fileURLToPath(new URL("../../.keys/phase0.json", import.meta.url));
