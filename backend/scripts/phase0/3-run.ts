@@ -114,6 +114,10 @@ try {
 
   const client = new x402Client()
     .register("solana:*", new ClientScheme(toClientSvmSigner(await kitSigner(keys.agent)), { rpcUrl: RPC_URL }))
+    // x402 clients only pay "default" assets (USDC and a few others) unless told otherwise.
+    // A custom mint has to be allowed explicitly, with a cap per payment. kuota-fetch will
+    // do the same, which doubles as the overspending guard in docs/ARCHITECTURE.md.
+    .setSpendControls({ allowedAssets: [{ network: NETWORK, asset: MINT, maxAmountPerPayment: PRICE_KUOTA }] })
     // This is the hook kuota-fetch will use: choose the option that costs the agent least.
     .registerPolicy((_version, requirements) => requirements.filter((r) => r.asset === MINT));
   const paidFetch = wrapFetchWithPayment(fetch, client);
@@ -146,7 +150,6 @@ try {
   results.transferChecked = transfer?.info;
   if (!transfer || transfer.info.mint !== MINT) fail("the settled transaction has no TransferChecked for the kuota mint");
 
-  // 6. Replaying the same payment must not work twice -----------------------------------------
   results.signature = settle.transaction;
   results.explorer = explorer(settle.transaction);
   console.log(JSON.stringify(results, (_, v) => (typeof v === "bigint" ? v.toString() : v), 2));
